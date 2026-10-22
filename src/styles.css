@@ -274,7 +274,7 @@ a {
 .hero-visual {
   height: 516px;
   position: relative;
-  margin-right: calc((100% - 100vw)/2);
+  margin-right: calc((min(1200px, 100vw - 64px) - 100vw)/2);
   background: #deded8;
   overflow: hidden
 }
@@ -1210,6 +1210,7 @@ input: :placeholder,textarea::placeholder {
   }
   .hero-visual {
     height: clamp(270px,79vw,410px);
+    margin-right: -18px;
     grid-row: 2
   }
   .hero-actions .button {
