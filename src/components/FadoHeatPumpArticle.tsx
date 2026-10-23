@@ -1,6 +1,5 @@
 export default function FadoHeatPumpArticle({ onBack, onContact }: { onBack: () => void; onContact: () => void }) {
   return <main className="detail-page fado-article-page">
-    <div className="topbar"><div className="container topbar-inner"><span>Виробники · FADO</span><button className="text-button" onClick={onBack}>До сторінки FADO ↗</button></div></div>
     <article className="container fado-article">
       <button className="button button-outline article-back" onClick={onBack}>← FADO</button>
       <p className="eyebrow"><span className="eyebrow-line" />ТЕПЛОВІ НАСОСИ · FADO</p>

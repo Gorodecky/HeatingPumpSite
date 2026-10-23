@@ -3,6 +3,9 @@ import DetailPage from './components/DetailPage';
 import AdminPage from './components/AdminPage';
 import FadoPage from './components/FadoPage';
 import FadoHeatPumpArticle from './components/FadoHeatPumpArticle';
+import LgThermaVPage from './components/LgThermaVPage';
+import ViessmannPage from './components/ViessmannPage';
+import SiteHeader from './components/SiteHeader';
 import { articles, brands, type SelectionForm } from './data/siteContent';
 import BrandsSection from './sections/BrandsSection';
 import ContactSection from './sections/ContactSection';
@@ -15,7 +18,11 @@ import SolutionsSection from './sections/SolutionsSection';
 type View = { kind: 'home' } | { kind: 'brand'; title: string } | { kind: 'article'; title: string } | { kind: 'privacy' } | { kind: 'admin' };
 
 function viewFromPath(): View {
-  const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+  const basePath = import.meta.env.BASE_URL;
+  const pathname = window.location.pathname.startsWith(basePath)
+    ? `/${window.location.pathname.slice(basePath.length)}`
+    : window.location.pathname;
+  const parts = decodeURIComponent(pathname).split('/').filter(Boolean);
   if (parts[0] === 'admin') return { kind: 'admin' };
   if (parts[0] === 'privacy') return { kind: 'privacy' };
   if (parts[0] === 'brands') {
@@ -54,7 +61,8 @@ function App() {
     const path = next.kind === 'home' ? '/' : next.kind === 'privacy' ? '/privacy' : next.kind === 'admin' ? '/admin'
       : next.kind === 'article' && next.title === 'Теплові насоси FADO' ? '/knowledge/teplovi-nasosy-fado/'
       : `/${next.kind === 'brand' ? 'brands' : 'knowledge'}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, '-'))}`;
-    window.history.pushState({}, '', path);
+    const basePath = import.meta.env.BASE_URL;
+    window.history.pushState({}, '', `${basePath}${path.replace(/^\//, '')}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const goTo = (id: string) => {
@@ -62,6 +70,7 @@ function App() {
     if (view.kind !== 'home') navigate({ kind: 'home' });
     window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 40);
   };
+  const siteHeader = <SiteHeader menuOpen={menuOpen} onToggleMenu={() => setMenuOpen(open => !open)} onNavigate={goTo} />;
   const patch = (key: keyof SelectionForm, value: string | boolean) => setForm(current => ({ ...current, [key]: value }));
   const submitLead = async (event: FormEvent<HTMLFormElement>, which: 'selection' | 'contact') => {
     event.preventDefault();
@@ -97,32 +106,17 @@ function App() {
     setStep(current => Math.min(3, current + 1));
   };
 
-  if (view.kind === 'admin') return <AdminPage onBack={() => navigate({ kind: 'home' })} />;
-  if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} />;
-  if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} />;
-  if (view.kind === 'brand') return <DetailPage eyebrow="Бренд" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Сторінка бренду готова для наповнення перевіреними даними: офіційні серії обладнання, документація, умови застосування та доступність у регіоні. Технічні характеристики, ціни й сумісність буде додано після перевірки офіційних джерел." />;
-  if (view.kind === 'article') return <DetailPage eyebrow="База знань · матеріал для підготовки" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Матеріал готується. Будь-які технічні твердження для цієї теми потрібно перевірити за офіційною документацією виробників і розрахунком для конкретного об’єкта." />;
-  if (view.kind === 'privacy') return <DetailPage eyebrow="Документ · чернетка" title="Політика конфіденційності" onBack={() => navigate({ kind: 'home' })} text="Ця сторінка поки є заглушкою, а не завершеною політикою. До публічного запуску власник сайту має надати юридичне ім’я або назву, контактні дані, правову підставу й мету обробки, строки зберігання заявок, порядок реалізації прав користувачів, а також відомості про одержувачів даних і хостинг. Не надсилайте персональні дані, доки політику не заповнено та не опубліковано." />;
+  if (view.kind === 'admin') return <>{siteHeader}<AdminPage /></>;
+  if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <>{siteHeader}<FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <>{siteHeader}<FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'brand' && view.title.toLowerCase() === 'lg') return <>{siteHeader}<LgThermaVPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'brand' && view.title.toLowerCase() === 'viessmann') return <>{siteHeader}<ViessmannPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'brand') return <>{siteHeader}<DetailPage eyebrow="Бренд" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Сторінка бренду готова для наповнення перевіреними даними: офіційні серії обладнання, документація, умови застосування та доступність у регіоні. Технічні характеристики, ціни й сумісність буде додано після перевірки офіційних джерел." /></>;
+  if (view.kind === 'article') return <>{siteHeader}<DetailPage eyebrow="База знань · матеріал для підготовки" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Матеріал готується. Будь-які технічні твердження для цієї теми потрібно перевірити за офіційною документацією виробників і розрахунком для конкретного об’єкта." /></>;
+  if (view.kind === 'privacy') return <>{siteHeader}<DetailPage eyebrow="Документ · чернетка" title="Політика конфіденційності" onBack={() => navigate({ kind: 'home' })} text="Ця сторінка поки є заглушкою, а не завершеною політикою. До публічного запуску власник сайту має надати юридичне ім’я або назву, контактні дані, правову підставу й мету обробки, строки зберігання заявок, порядок реалізації прав користувачів, а також відомості про одержувачів даних і хостинг. Не надсилайте персональні дані, доки політику не заповнено та не опубліковано." /></>;
 
   return <>
-    <div className="topbar">
-      <div className="container topbar-inner">
-        <span>Підбір теплових насосів · Вінниця та область</span>
-        <a href="#contact">Зв’язатися <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-    <header className="header">
-      <div className="container header-inner">
-        <button className="wordmark" onClick={() => goTo('home')} aria-label="Тепло поруч — на головну">
-          <span className="mark" aria-hidden="true">Т<span>.</span></span><span>Тепло поруч<small>ТЕПЛОВІ РІШЕННЯ</small></span>
-        </button>
-        <button className="menu-toggle" aria-label={menuOpen ? 'Закрити меню' : 'Відкрити меню'} aria-expanded={menuOpen} onClick={() => setMenuOpen(open => !open)}>{menuOpen ? '×' : '☰'}</button>
-        <nav className={menuOpen ? 'nav open' : 'nav'} aria-label="Головна навігація">
-          <button onClick={() => goTo('solutions')}>Рішення</button><button onClick={() => goTo('brands')}>Бренди</button><button onClick={() => goTo('knowledge')}>База знань</button><button onClick={() => goTo('contact')}>Контакти</button>
-          <button className="button button-dark nav-cta" onClick={() => goTo('selection')}>Підібрати <span>↗</span></button>
-        </nav>
-      </div>
-    </header>
+    {siteHeader}
     <main id="home">
       <HeroSection goTo={goTo} />
       <SolutionsSection goTo={goTo} />

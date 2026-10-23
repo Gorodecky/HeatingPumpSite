@@ -4,7 +4,6 @@ export default function FadoPage({ onBack, onArticle, onContact }: {
   onContact: () => void;
 }) {
   return <main className="fado-page">
-    <div className="topbar"><div className="container topbar-inner"><span>Виробники · FADO</span><span>Теплові рішення · Вінниця та область</span></div></div>
     <div className="container fado-content">
       <button className="button button-outline fado-back" onClick={onBack}>← Усі виробники</button>
       <nav className="breadcrumbs" aria-label="Навігаційний ланцюжок"><button onClick={onBack}>Виробники</button><span aria-hidden="true">/</span><span aria-current="page">FADO</span></nav>

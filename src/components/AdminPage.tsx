@@ -17,7 +17,7 @@ type Lead = {
 
 const statusLabels: Record<Lead['status'], string> = { NEW: 'Нова', CONTACTED: 'Опрацьовується', CLOSED: 'Закрита' };
 
-export default function AdminPage({ onBack }: { onBack: () => void }) {
+export default function AdminPage() {
   const [csrfToken, setCsrfToken] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,6 @@ export default function AdminPage({ onBack }: { onBack: () => void }) {
   };
 
   return <main className="detail-page admin-page">
-    <div className="topbar"><div className="container topbar-inner"><span>Тепло поруч · адміністративний розділ</span><button onClick={onBack}>На головну</button></div></div>
     <div className="container admin-content">
       <p className="eyebrow"><span className="eyebrow-line" />АДМІНІСТРАТОР</p>
       {loading ? <p role="status">Перевіряємо сесію…</p> : authenticated ? <>
