@@ -1,5 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import DetailPage from './components/DetailPage';
+import AdminPage from './components/AdminPage';
+import FadoPage from './components/FadoPage';
+import FadoHeatPumpArticle from './components/FadoHeatPumpArticle';
 import { articles, brands, type SelectionForm } from './data/siteContent';
 import BrandsSection from './sections/BrandsSection';
 import ContactSection from './sections/ContactSection';
@@ -9,10 +12,11 @@ import ProcessSection from './sections/ProcessSection';
 import SelectionSection from './sections/SelectionSection';
 import SolutionsSection from './sections/SolutionsSection';
 
-type View = { kind: 'home' } | { kind: 'brand'; title: string } | { kind: 'article'; title: string } | { kind: 'privacy' };
+type View = { kind: 'home' } | { kind: 'brand'; title: string } | { kind: 'article'; title: string } | { kind: 'privacy' } | { kind: 'admin' };
 
 function viewFromPath(): View {
   const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+  if (parts[0] === 'admin') return { kind: 'admin' };
   if (parts[0] === 'privacy') return { kind: 'privacy' };
   if (parts[0] === 'brands') {
     const name = parts[1]?.replace(/-/g, ' ') || 'Бренд';
@@ -20,6 +24,7 @@ function viewFromPath(): View {
   }
   if (parts[0] === 'knowledge') {
     const slug = parts[1] || '';
+    if (slug === 'teplovi-nasosy-fado') return { kind: 'article', title: 'Теплові насоси FADO' };
     const found = articles.find(([title]) => title.toLowerCase().replace(/\s+/g, '-') === slug);
     return { kind: 'article', title: found?.[0] || slug.replace(/-/g, ' ') };
   }
@@ -33,6 +38,9 @@ function App() {
   const [form, setForm] = useState<SelectionForm>({ city: '', area: '', object: '', heating: '', timing: '', name: '', phone: '', consent: false });
   const [formMessage, setFormMessage] = useState('');
   const [contactMessage, setContactMessage] = useState('');
+  const [contactConsent, setContactConsent] = useState(false);
+  const [selectionStatus, setSelectionStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     const back = () => { setView(viewFromPath()); window.scrollTo(0, 0); };
@@ -43,7 +51,10 @@ function App() {
   const navigate = (next: View) => {
     setView(next);
     setMenuOpen(false);
-    window.history.pushState({}, '', next.kind === 'home' ? '/' : next.kind === 'privacy' ? '/privacy' : `/${next.kind === 'brand' ? 'brands' : 'knowledge'}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, '-'))}`);
+    const path = next.kind === 'home' ? '/' : next.kind === 'privacy' ? '/privacy' : next.kind === 'admin' ? '/admin'
+      : next.kind === 'article' && next.title === 'Теплові насоси FADO' ? '/knowledge/teplovi-nasosy-fado/'
+      : `/${next.kind === 'brand' ? 'brands' : 'knowledge'}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, '-'))}`;
+    window.history.pushState({}, '', path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const goTo = (id: string) => {
@@ -52,10 +63,28 @@ function App() {
     window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 40);
   };
   const patch = (key: keyof SelectionForm, value: string | boolean) => setForm(current => ({ ...current, [key]: value }));
-  const submitDemo = (event: FormEvent, which: 'selection' | 'contact') => {
+  const submitLead = async (event: FormEvent<HTMLFormElement>, which: 'selection' | 'contact') => {
     event.preventDefault();
-    if (which === 'selection') setFormMessage('Це демонстраційна форма: заявку ще не передано. Для приймання звернень потрібно підключити CRM або серверний API.');
-    else setContactMessage('Це демонстраційна форма: повідомлення не передано. Підключіть CRM або серверний API, щоб отримувати звернення.');
+    const setStatus = which === 'selection' ? setSelectionStatus : setContactStatus;
+    const setMessage = which === 'selection' ? setFormMessage : setContactMessage;
+    setStatus('sending');
+    setMessage('');
+    const contactData = new FormData(event.currentTarget);
+    const payload = which === 'selection'
+      ? { source: 'selection', city: form.city, area: form.area, object: form.object, heating: form.heating, timing: form.timing, name: form.name, phone: form.phone, consent: form.consent }
+      : { source: 'contact', name: String(contactData.get('name') || ''), phone: String(contactData.get('phone') || ''), comment: String(contactData.get('comment') || ''), consent: contactConsent };
+    try {
+      const response = await fetch('/api/v1/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Не вдалося надіслати запит. Спробуйте ще раз.');
+      setStatus('success');
+      setMessage('Дякуємо! Запит збережено. Ми використаємо ці дані, щоб відповісти на нього.');
+      if (which === 'selection') setForm(current => ({ ...current, consent: false }));
+      else setContactConsent(false);
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : 'Не вдалося надіслати запит. Перевірте з’єднання та спробуйте ще раз.');
+    }
   };
   const selectionNext = () => {
     const required: (keyof SelectionForm)[] = step === 1 ? ['city', 'area', 'object'] : ['heating', 'timing'];
@@ -64,12 +93,16 @@ function App() {
       return;
     }
     setFormMessage('');
+    setSelectionStatus('idle');
     setStep(current => Math.min(3, current + 1));
   };
 
+  if (view.kind === 'admin') return <AdminPage onBack={() => navigate({ kind: 'home' })} />;
+  if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} />;
+  if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} />;
   if (view.kind === 'brand') return <DetailPage eyebrow="Бренд" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Сторінка бренду готова для наповнення перевіреними даними: офіційні серії обладнання, документація, умови застосування та доступність у регіоні. Технічні характеристики, ціни й сумісність буде додано після перевірки офіційних джерел." />;
   if (view.kind === 'article') return <DetailPage eyebrow="База знань · матеріал для підготовки" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Матеріал готується. Будь-які технічні твердження для цієї теми потрібно перевірити за офіційною документацією виробників і розрахунком для конкретного об’єкта." />;
-  if (view.kind === 'privacy') return <DetailPage eyebrow="Документ" title="Політика конфіденційності" onBack={() => navigate({ kind: 'home' })} text="Заглушка. Перед запуском форми необхідно опублікувати політику конфіденційності із зазначенням володільця даних, мети й строків обробки, прав користувача та контактів для звернень." />;
+  if (view.kind === 'privacy') return <DetailPage eyebrow="Документ · чернетка" title="Політика конфіденційності" onBack={() => navigate({ kind: 'home' })} text="Ця сторінка поки є заглушкою, а не завершеною політикою. До публічного запуску власник сайту має надати юридичне ім’я або назву, контактні дані, правову підставу й мету обробки, строки зберігання заявок, порядок реалізації прав користувачів, а також відомості про одержувачів даних і хостинг. Не надсилайте персональні дані, доки політику не заповнено та не опубліковано." />;
 
   return <>
     <div className="topbar">
@@ -94,11 +127,11 @@ function App() {
       <HeroSection goTo={goTo} />
       <SolutionsSection goTo={goTo} />
       <ProcessSection />
-      <SelectionSection form={form} step={step} message={formMessage} onPatch={patch} onSubmit={event => submitDemo(event, 'selection')} onNext={selectionNext}
+      <SelectionSection form={form} step={step} message={formMessage} status={selectionStatus} onPatch={patch} onSubmit={event => { void submitLead(event, 'selection'); }} onNext={selectionNext}
         onBack={() => { setFormMessage(''); setStep(current => current - 1); }} onPrivacy={() => navigate({ kind: 'privacy' })} />
       <BrandsSection brands={brands} onBrand={title => navigate({ kind: 'brand', title })} />
       <KnowledgeSection articles={articles} onArticle={title => navigate({ kind: 'article', title })} />
-      <ContactSection message={contactMessage} onSubmit={event => submitDemo(event, 'contact')} onPrivacy={() => navigate({ kind: 'privacy' })} />
+      <ContactSection message={contactMessage} consent={contactConsent} onConsentChange={setContactConsent} status={contactStatus} onSubmit={event => { void submitLead(event, 'contact'); }} onPrivacy={() => navigate({ kind: 'privacy' })} />
     </main>
     <footer className="footer">
       <div className="container">

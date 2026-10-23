@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+model Lead {
+  id                  String     @id @default(uuid()) @db.Uuid
+  createdAt           DateTime   @default(now())
+  status              LeadStatus @default(NEW)
+  source              String     @db.VarChar(20)
+  city                String?    @db.VarChar(100)
+  area                String?    @db.VarChar(40)
+  objectType          String?    @db.VarChar(80)
+  heatingSystem       String?    @db.VarChar(80)
+  realizationTiming   String?    @db.VarChar(80)
+  name                String     @db.VarChar(100)
+  phone               String     @db.VarChar(30)
+  comment             String?    @db.VarChar(2000)
+  consentGiven        Boolean    @default(false)
+  consentAt           DateTime?
+  policyVersion       String     @db.VarChar(40)
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model AdminUser {
+  id           String   @id @default(uuid()) @db.Uuid
+  username     String   @unique @db.VarChar(80)
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

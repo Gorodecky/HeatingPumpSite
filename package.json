@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": { "dev": "vite", "build": "tsc -b && vite build", "preview": "vite preview" },
+  "scripts": { "dev": "vite", "build": "tsc -b && vite build", "preview": "vite preview", "dev:server": "npm --prefix server run dev", "build:server": "npm --prefix server run build", "db:migrate": "npm --prefix server run db:migrate", "admin:create": "npm --prefix server run admin:create" },
   "dependencies": { "react": "^18.3.1", "react-dom": "^18.3.1" },
   "devDependencies": { "@types/react": "^18.3.12", "@types/react-dom": "^18.3.1", "@vitejs/plugin-react": "^4.3.4", "typescript": "~5.6.2", "vite": "^5.4.10" }
 }

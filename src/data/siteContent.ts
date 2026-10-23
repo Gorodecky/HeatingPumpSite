@@ -1,4 +1,4 @@
-export const brands = ['Viessmann', 'LG', 'AUX', 'Fado'];
+export const brands = ['Viessmann', 'LG', 'AUX', 'FADO'];
 
 export const articles = [
   ['Чи підійде тепловий насос вашому будинку?', 'Починаємо з огляду будинку, утеплення, тепловтрат і доступних джерел тепла.'],

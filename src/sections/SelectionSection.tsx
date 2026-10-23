@@ -4,12 +4,13 @@ import { areas, heatingTypes, objectTypes, timing, type SelectionForm } from '..
 
 type FormKey = keyof SelectionForm;
 
-export default function SelectionSection({ form, step, message, onPatch, onSubmit, onNext, onBack, onPrivacy }: {
+export default function SelectionSection({ form, step, message, status, onPatch, onSubmit, onNext, onBack, onPrivacy }: {
   form: SelectionForm;
   step: number;
   message: string;
+  status: 'idle' | 'sending' | 'success' | 'error';
   onPatch: (key: FormKey, value: string | boolean) => void;
-  onSubmit: (event: FormEvent) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onNext: () => void;
   onBack: () => void;
   onPrivacy: () => void;
@@ -37,14 +38,15 @@ export default function SelectionSection({ form, step, message, onPatch, onSubmi
           <label className="field-label" htmlFor="phone">Телефон для зв’язку</label>
           <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={e => onPatch('phone', e.target.value)} placeholder="+380 …" required />
           <label className="consent"><input type="checkbox" checked={form.consent} onChange={e => onPatch('consent', e.target.checked)} required />
-            <span>Погоджуюся, щоб зі мною зв’язалися щодо мого запиту. <button type="button" className="inline-link" onClick={onPrivacy}>Політика конфіденційності</button></span>
+            <span>Погоджуюся на обробку персональних даних, щоб отримати відповідь на цей запит. <a href="/privacy" className="inline-link" onClick={event => { event.preventDefault(); onPrivacy(); }}>Політика конфіденційності</a></span>
           </label>
         </>}
         <div className="form-controls">
           {step > 1 && <button type="button" className="button button-outline" onClick={onBack}>← Назад</button>}
-          {step < 3 ? <button type="button" className="button button-dark" onClick={onNext}>Далі <span>→</span></button> : <button type="submit" className="button button-dark">Надіслати запит <span>↗</span></button>}
+          {step < 3 ? <button type="button" className="button button-dark" onClick={onNext}>Далі <span>→</span></button> : <button type="submit" className="button button-dark" disabled={status === 'sending'}>{status === 'sending' ? 'Надсилаємо…' : <>Надіслати запит <span>↗</span></>}</button>}
         </div>
-        {message && <p className="form-message" role="status">{message}</p>}
+        {status === 'sending' && <p className="form-message" role="status">Надсилаємо запит…</p>}
+        {message && <p className="form-message" role={status === 'error' ? 'alert' : 'status'}>{message}</p>}
         <p className="privacy-hint">Демонстраційний режим: дані не передаються та не зберігаються.</p>
       </form>
     </div>
