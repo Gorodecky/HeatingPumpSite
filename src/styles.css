@@ -1,16 +1,52 @@
 :root {
+  --color-background: #f5f5f2;
+  --color-muted: #6b7070;
+  --color-border: #d9dbd7;
+  --color-accent: #e8783d;
+  --color-white: #fff;
+  --color-transparent: transparent;
+  --color-tone-c9cdca: #c9cdca;
+  --color-overlay-rgba-39-43-44-1: rgba(39,43,44,.1);
+  --color-tone-787d7c: #787d7c;
+  --color-tone-e7e8e4: #e7e8e4;
+  --color-tone-676c6b: #676c6b;
+  --color-tone-909594: #909594;
+  --color-tone-626867: #626867;
+  --color-tone-deded8: #deded8;
+  --color-overlay-rgba-23-27-27-32: rgba(23,27,27,.32);
+  --color-overlay-rgba-255-255-255-7: rgba(255,255,255,.7);
+  --color-tone-e9eae6: #e9eae6;
+  --color-tone-757a78: #757a78;
+  --color-tone-9a9e9b: #9a9e9b;
+  --color-tone-727775: #727775;
+  --color-tone-c1c5c2: #c1c5c2;
+  --color-tone-8c9290: #8c9290;
+  --color-tone-b7bcba: #b7bcba;
+  --color-tone-4c5050: #4c5050;
+  --color-tone-b4b9b7: #b4b9b7;
+  --color-tone-edede9: #ededE9;
+  --color-tone-f7f7f4: #f7f7f4;
+  --color-tone-e0e1dc: #e0e1dc;
+  --color-tone-d5d8d4: #d5d8d4;
+  --color-tone-5b6260: #5b6260;
+  --color-overlay-rgba-232-120-61-12: rgba(232,120,61,.12);
+  --color-tone-a0a5a1: #a0a5a1;
+  --color-tone-8a8e8c: #8a8e8c;
+  --color-tone-f3e8e1: #f3e8e1;
+  --color-tone-7c817f: #7c817f;
+  --color-tone-a7acaa: #a7acaa;
+  --color-tone-b9bcb7: #b9bcb7;
+  --color-tone-868b88: #868b88;
+  --color-tone-f0f1ed: #f0f1ed;
+  --color-tone-9da3a0: #9da3a0;
+  --color-tone-a9afac: #a9afac;
+  --color-tone-f2f3ef: #f2f3ef;
+  --color-tone-838987: #838987;
+  --color-overlay-rgba-30-35-35-08: rgba(30,35,35,.08);
   font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  color: #272b2c;
-  background: #f5f5f2;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --ink: #272b2c;
-  --muted: #6b7070;
-  --line: #d9dbd7;
-  --paper: #f5f5f2;
-  --orange: #e8783d;
-  --dark: #282c2e;
   --font: inherit
 }
 
@@ -48,8 +84,8 @@ a {
 
 .topbar {
   height: 38px;
-  background: #282c2e;
-  color: #c9cdca;
+  background: var(--color-tone-4c5050);
+  color: var(--color-tone-c9cdca);
   font-size: 10px;
   letter-spacing: .09em;
   text-transform: uppercase
@@ -67,14 +103,14 @@ a {
 }
 
 .topbar a span {
-  color: #f1874e;
+  color: var(--color-accent);
   margin-left: 7px
 }
 
 .header {
   height: 78px;
-  border-bottom: 1px solid rgba(39,43,44,.1);
-  background: var(--paper);
+  border-bottom: 1px solid var(--color-overlay-rgba-39-43-44-1);
+  background: var(--color-background);
   position: relative;
   z-index: 5
 }
@@ -103,7 +139,7 @@ a {
   display: block;
   font-size: 8px;
   letter-spacing: .2em;
-  color: #787d7c;
+  color: var(--color-tone-787d7c);
   margin-top: 3px;
   font-weight: 600
 }
@@ -115,7 +151,7 @@ a {
 }
 
 .mark span {
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .nav {
@@ -132,7 +168,7 @@ a {
 }
 
 .nav>button:not(.button):hover,.footer-column button:hover {
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .button {
@@ -142,7 +178,7 @@ a {
   gap: 24px;
   min-height: 50px;
   padding: 0 20px;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--color-tone-4c5050);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: .02em;
@@ -155,22 +191,22 @@ a {
 }
 
 .button-dark {
-  background: var(--ink);
-  color: #fff
+  background: var(--color-tone-4c5050);
+  color: var(--color-white)
 }
 
 .button-dark:hover {
-  background: var(--orange);
-  border-color: var(--orange)
+  background: var(--color-accent);
+  border-color: var(--color-accent)
 }
 
 .button-outline {
-  background: transparent;
-  color: var(--ink)
+  background: var(--color-transparent);
+  color: var(--color-tone-4c5050)
 }
 
 .button-outline:hover {
-  background: #e7e8e4
+  background: var(--color-tone-e7e8e4)
 }
 
 .nav .nav-cta {
@@ -208,14 +244,14 @@ a {
   font-size: 9px;
   letter-spacing: .18em;
   font-weight: 700;
-  color: #676c6b;
+  color: var(--color-tone-676c6b);
   margin: 0 0 23px
 }
 
 .eyebrow-line {
   width: 24px;
   height: 1px;
-  background: var(--orange);
+  background: var(--color-accent);
   display: inline-block
 }
 
@@ -228,12 +264,12 @@ a {
 }
 
 .hero h1 span {
-  color: #909594
+  color: var(--color-tone-909594)
 }
 
 .hero-lead {
   max-width: 410px;
-  color: #626867;
+  color: var(--color-tone-626867);
   font-size: 14px;
   line-height: 1.8;
   margin: 0 0 28px
@@ -249,7 +285,7 @@ a {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #6d7271;
+  color: var(--color-muted);
   font-size: 9px;
   margin-top: 34px;
   letter-spacing: .015em
@@ -259,7 +295,7 @@ a {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--orange);
+  background: var(--color-accent);
   display: inline-block;
   flex: none
 }
@@ -267,7 +303,7 @@ a {
 .foot-divider {
   height: 14px;
   width: 1px;
-  background: var(--line);
+  background: var(--color-border);
   margin: 0 3px
 }
 
@@ -275,7 +311,7 @@ a {
   height: 516px;
   position: relative;
   margin-right: calc((min(1200px, 100vw - 64px) - 100vw)/2);
-  background: #deded8;
+  background: var(--color-tone-deded8);
   overflow: hidden
 }
 
@@ -283,7 +319,7 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,transparent 65%,rgba(23,27,27,.32))
+  background: linear-gradient(180deg,var(--color-transparent) 65%,var(--color-overlay-rgba-23-27-27-32))
 }
 
 .hero-visual img {
@@ -299,7 +335,7 @@ a {
   z-index: 1;
   bottom: 22px;
   left: 23px;
-  color: #fff;
+  color: var(--color-white);
   font-size: 9px;
   display: flex;
   gap: 12px;
@@ -314,7 +350,7 @@ a {
 .image-label i {
   width: 25px;
   height: 1px;
-  background: var(--orange)
+  background: var(--color-accent)
 }
 
 .hero-stamp {
@@ -324,9 +360,9 @@ a {
   top: 20px;
   width: 70px;
   height: 70px;
-  border: 1px solid rgba(255,255,255,.7);
+  border: 1px solid var(--color-overlay-rgba-255-255-255-7);
   border-radius: 50%;
-  color: #fff;
+  color: var(--color-white);
   font-size: 8px;
   letter-spacing: .1em;
   display: grid;
@@ -336,12 +372,12 @@ a {
 }
 
 .hero-stamp span {
-  color: #f18a50
+  color: var(--color-accent)
 }
 
 .trust-strip {
-  background: #e9eae6;
-  border-block: 1px solid #dddfda
+  background: var(--color-tone-e9eae6);
+  border-block: 1px solid var(--color-tone-deded8)
 }
 
 .trust-grid {
@@ -355,11 +391,11 @@ a {
 .trust-grid>span {
   font-size: 9px;
   letter-spacing: .12em;
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .trust-grid b {
-  color: var(--ink);
+  color: var(--color-tone-4c5050);
   letter-spacing: 0;
   font-size: 11px;
   font-weight: 600;
@@ -367,7 +403,7 @@ a {
 }
 
 .trust-grid .trust-note {
-  color: #757a78;
+  color: var(--color-tone-757a78);
   font-size: 10px;
   letter-spacing: 0;
   text-align: right
@@ -387,13 +423,13 @@ a {
 
 .section-index {
   padding-top: 6px;
-  color: var(--orange);
+  color: var(--color-accent);
   font-size: 10px;
   letter-spacing: .08em
 }
 
 .section-index span {
-  color: #9a9e9b
+  color: var(--color-tone-9a9e9b)
 }
 
 .section-head .eyebrow {
@@ -409,12 +445,12 @@ a {
 }
 
 .section-head h2 span {
-  color: #929795
+  color: var(--color-tone-909594)
 }
 
 .section-intro {
   margin: 36px 0 0;
-  color: #686e6c;
+  color: var(--color-tone-676c6b);
   font-size: 12px;
   line-height: 1.8;
   max-width: 350px
@@ -423,15 +459,15 @@ a {
 .scenario-grid {
   display: grid;
   grid-template-columns: repeat(3,1fr);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line)
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border)
 }
 
 .scenario {
   min-height: 208px;
   padding: 25px 27px 23px 0;
   position: relative;
-  border-right: 1px solid var(--line)
+  border-right: 1px solid var(--color-border)
 }
 
 .scenario+.scenario {
@@ -444,7 +480,7 @@ a {
 
 .scenario-letter {
   font-size: 10px;
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .scenario h3 {
@@ -457,7 +493,7 @@ a {
 .scenario p {
   font-size: 11px;
   line-height: 1.75;
-  color: #727775;
+  color: var(--color-tone-727775);
   max-width: 270px;
   margin: 0
 }
@@ -468,7 +504,7 @@ a {
   bottom: 22px;
   border: 0;
   background: none;
-  color: var(--orange);
+  color: var(--color-accent);
   font-size: 17px
 }
 
@@ -477,8 +513,8 @@ a {
 }
 
 .process-band {
-  background: #282c2e;
-  color: #f4f4f0;
+  background: var(--color-tone-4c5050);
+  color: var(--color-background);
   padding: 90px 0 100px
 }
 
@@ -489,7 +525,7 @@ a {
 }
 
 .eyebrow.light {
-  color: #c1c5c2
+  color: var(--color-tone-c1c5c2)
 }
 
 .process-band h2 {
@@ -502,12 +538,12 @@ a {
 
 .process-band h2 em {
   font-style: normal;
-  color: #8c9290
+  color: var(--color-tone-8c9290)
 }
 
 .process-copy {
   max-width: 350px;
-  color: #b7bcba;
+  color: var(--color-tone-b7bcba);
   font-size: 12px;
   line-height: 1.85;
   margin: 27px 0 0
@@ -522,17 +558,17 @@ a {
   grid-template-columns: 48px 1fr 24px;
   gap: 13px;
   align-items: start;
-  border-top: 1px solid #4c5050;
+  border-top: 1px solid var(--color-tone-4c5050);
   padding: 24px 0 25px
 }
 
 .process-step:last-child {
-  border-bottom: 1px solid #4c5050
+  border-bottom: 1px solid var(--color-tone-4c5050)
 }
 
 .process-step>span:first-child {
   font-size: 10px;
-  color: var(--orange);
+  color: var(--color-accent);
   padding-top: 2px
 }
 
@@ -545,17 +581,17 @@ a {
 .process-step p {
   font-size: 11px;
   line-height: 1.7;
-  color: #b4b9b7;
+  color: var(--color-tone-b4b9b7);
   margin: 0;
   max-width: 390px
 }
 
 .step-arrow {
-  color: #f2864a
+  color: var(--color-accent)
 }
 
 .selection-section {
-  background: #ededE9
+  background: var(--color-tone-edede9)
 }
 
 .form-layout {
@@ -583,23 +619,23 @@ a {
   margin-top: 34px;
   font-size: 10px;
   line-height: 1.75;
-  color: #666c69;
+  color: var(--color-tone-676c6b);
   max-width: 365px
 }
 
 .form-aside-note span {
   width: 18px;
   height: 18px;
-  border: 1px solid var(--orange);
+  border: 1px solid var(--color-accent);
   border-radius: 50%;
-  color: var(--orange);
+  color: var(--color-accent);
   display: grid;
   place-content: center;
   flex: none
 }
 
 .selection-form,.contact-form {
-  background: #f7f7f4;
+  background: var(--color-tone-f7f7f4);
   padding: 35px 36px
 }
 
@@ -607,7 +643,7 @@ a {
   display: flex;
   align-items: center;
   gap: 18px;
-  color: #7a7f7d;
+  color: var(--color-tone-787d7c);
   font-size: 9px;
   letter-spacing: .1em;
   margin-bottom: 28px
@@ -615,14 +651,14 @@ a {
 
 .step-progress {
   height: 2px;
-  background: #e0e1dc;
+  background: var(--color-tone-e0e1dc);
   flex: 1
 }
 
 .step-progress i {
   display: block;
   height: 100%;
-  background: var(--orange);
+  background: var(--color-accent);
   transition: width .2s
 }
 
@@ -639,8 +675,8 @@ a {
 
 .selection-form input:not([type=checkbox]),.contact-form input:not([type=checkbox]),.contact-form textarea {
   width: 100%;
-  border: 1px solid #d5d8d4;
-  background: transparent;
+  border: 1px solid var(--color-tone-d5d8d4);
+  background: var(--color-transparent);
   padding: 13px 14px;
   outline: none;
   font-size: 12px;
@@ -648,12 +684,12 @@ a {
 }
 
 .selection-form input:focus,.contact-form input:focus,.contact-form textarea:focus {
-  border-color: #5b6260;
-  box-shadow: 0 0 0 2px rgba(232,120,61,.12)
+  border-color: var(--color-tone-5b6260);
+  box-shadow: 0 0 0 2px var(--color-overlay-rgba-232-120-61-12)
 }
 
 input: :placeholder,textarea::placeholder {
-  color: #a0a5a1
+  color: var(--color-tone-a0a5a1)
 }
 
 .choice-row {
@@ -665,16 +701,16 @@ input: :placeholder,textarea::placeholder {
 .choice {
   min-height: 35px;
   padding: 0 11px;
-  border: 1px solid #d5d8d4;
-  background: transparent;
+  border: 1px solid var(--color-tone-d5d8d4);
+  background: var(--color-transparent);
   font-size: 10px;
-  color: #686e6c
+  color: var(--color-tone-676c6b)
 }
 
 .choice:hover,.choice.selected {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: white
+  border-color: var(--color-tone-4c5050);
+  background: var(--color-tone-4c5050);
+  color: var(--color-white)
 }
 
 .spaced-label {
@@ -684,7 +720,7 @@ input: :placeholder,textarea::placeholder {
 .form-hint,.privacy-hint {
   font-size: 9px;
   line-height: 1.7;
-  color: #8a8e8c
+  color: var(--color-tone-8a8e8c)
 }
 
 .form-hint {
@@ -709,11 +745,11 @@ input: :placeholder,textarea::placeholder {
   margin: 22px 0 0;
   font-size: 9px;
   line-height: 1.65;
-  color: #676d6a
+  color: var(--color-tone-676c6b)
 }
 
 .consent input {
-  accent-color: var(--orange);
+  accent-color: var(--color-accent);
   margin: 2px 0 0;
   flex: none
 }
@@ -729,12 +765,12 @@ input: :placeholder,textarea::placeholder {
 }
 
 .form-message {
-  border-left: 2px solid var(--orange);
+  border-left: 2px solid var(--color-accent);
   padding: 10px 12px;
-  background: #f3e8e1;
+  background: var(--color-tone-f3e8e1);
   font-size: 10px;
   line-height: 1.65;
-  color: #563a2a
+  color: var(--color-tone-4c5050)
 }
 
 .privacy-hint {
@@ -748,7 +784,7 @@ input: :placeholder,textarea::placeholder {
 .brand-grid {
   display: grid;
   grid-template-columns: repeat(4,1fr);
-  border-block: 1px solid var(--line)
+  border-block: 1px solid var(--color-border)
 }
 
 .brand-card {
@@ -756,7 +792,7 @@ input: :placeholder,textarea::placeholder {
   text-align: left;
   background: none;
   border: 0;
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--color-border);
   padding: 19px 20px 18px 0;
   position: relative;
   display: flex;
@@ -773,12 +809,12 @@ input: :placeholder,textarea::placeholder {
 }
 
 .brand-card:hover .brand-name {
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .brand-num {
   font-size: 8px;
-  color: #8b908e;
+  color: var(--color-tone-8c9290);
   letter-spacing: .1em
 }
 
@@ -792,7 +828,7 @@ input: :placeholder,textarea::placeholder {
 
 .brand-detail {
   font-size: 9px;
-  color: #7c817f;
+  color: var(--color-tone-7c817f);
   margin-top: 8px
 }
 
@@ -800,7 +836,7 @@ input: :placeholder,textarea::placeholder {
   position: absolute;
   bottom: 18px;
   right: 18px;
-  color: var(--orange);
+  color: var(--color-accent);
   font-size: 16px
 }
 
@@ -809,14 +845,14 @@ input: :placeholder,textarea::placeholder {
   align-items: center;
   gap: 10px;
   font-size: 9px;
-  color: #777d7a;
+  color: var(--color-tone-787d7c);
   margin-top: 20px
 }
 
 .accuracy-note span {
   width: 16px;
   height: 16px;
-  border: 1px solid #a7acaa;
+  border: 1px solid var(--color-tone-a7acaa);
   border-radius: 50%;
   display: grid;
   place-content: center;
@@ -825,7 +861,7 @@ input: :placeholder,textarea::placeholder {
 
 .knowledge-section {
   padding: 94px 0 100px;
-  background: #e9eae6
+  background: var(--color-tone-e9eae6)
 }
 
 .knowledge-section .section-intro {
@@ -841,8 +877,8 @@ input: :placeholder,textarea::placeholder {
 .article-card {
   min-height: 216px;
   text-align: left;
-  background: #f5f5f2;
-  border: 1px solid #dfe0dc;
+  background: var(--color-background);
+  border: 1px solid var(--color-tone-e0e1dc);
   padding: 19px 19px 18px;
   display: flex;
   flex-direction: column;
@@ -851,21 +887,21 @@ input: :placeholder,textarea::placeholder {
 }
 
 .article-card:hover {
-  background: #fff;
-  border-color: #b9bcb7
+  background: var(--color-white);
+  border-color: var(--color-tone-b9bcb7)
 }
 
 .article-meta {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  color: #868b88;
+  color: var(--color-tone-868b88);
   font-size: 8px;
   letter-spacing: .1em
 }
 
 .article-meta span {
-  color: var(--orange);
+  color: var(--color-accent);
   font-size: 14px
 }
 
@@ -880,7 +916,7 @@ input: :placeholder,textarea::placeholder {
 .article-desc {
   font-size: 10px;
   line-height: 1.7;
-  color: #727875
+  color: var(--color-tone-727775)
 }
 
 .knowledge-foot {
@@ -888,12 +924,12 @@ input: :placeholder,textarea::placeholder {
   display: flex;
   justify-content: space-between;
   font-size: 9px;
-  color: #737976
+  color: var(--color-tone-757a78)
 }
 
 .knowledge-foot span {
   font-size: 8px;
-  color: #8c918f;
+  color: var(--color-tone-8c9290);
   letter-spacing: .1em
 }
 
@@ -923,7 +959,7 @@ input: :placeholder,textarea::placeholder {
 
 .contact-place {
   margin-top: 42px;
-  color: #747a77;
+  color: var(--color-tone-757a78);
   font-size: 10px;
   display: flex;
   align-items: center;
@@ -931,7 +967,7 @@ input: :placeholder,textarea::placeholder {
 }
 
 .contact-form {
-  border: 1px solid #e0e1dc
+  border: 1px solid var(--color-tone-e0e1dc)
 }
 
 .contact-form .field-label {
@@ -953,14 +989,14 @@ input: :placeholder,textarea::placeholder {
 
 .optional {
   font-weight: 400;
-  color: #999e9b;
+  color: var(--color-tone-9a9e9b);
   font-size: 9px;
   margin-left: 5px
 }
 
 .footer {
-  background: #282c2e;
-  color: #e5e7e3;
+  background: var(--color-tone-4c5050);
+  color: var(--color-tone-e7e8e4);
   padding: 50px 0 0
 }
 
@@ -972,17 +1008,17 @@ input: :placeholder,textarea::placeholder {
 }
 
 .footer-mark {
-  color: #f0f1ed
+  color: var(--color-tone-f0f1ed)
 }
 
 .footer-mark small {
-  color: #9da3a0
+  color: var(--color-tone-9da3a0)
 }
 
 .footer-promise {
   font-size: 12px;
   line-height: 1.75;
-  color: #9da3a0;
+  color: var(--color-tone-9da3a0);
   margin-top: 23px
 }
 
@@ -995,13 +1031,13 @@ input: :placeholder,textarea::placeholder {
 
 .footer-column>span {
   font-size: 8px;
-  color: #ee8951;
+  color: var(--color-accent);
   letter-spacing: .15em;
   margin-bottom: 8px
 }
 
 .footer-column button,.footer-column p {
-  color: #d8dcd8;
+  color: var(--color-border);
   font-size: 10px;
   margin: 0;
   text-align: left
@@ -1009,23 +1045,23 @@ input: :placeholder,textarea::placeholder {
 
 .footer-column i {
   font-style: normal;
-  color: #a9afac
+  color: var(--color-tone-a9afac)
 }
 
 .footer-bottom {
   height: 48px;
-  border-top: 1px solid #464b4b;
+  border-top: 1px solid var(--color-tone-4c5050);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #989f9b;
+  color: var(--color-tone-9a9e9b);
   font-size: 8px;
   letter-spacing: .03em
 }
 
 .footer-bottom button {
   background: none;
-  color: #f2f3ef;
+  color: var(--color-tone-f2f3ef);
   border: 0;
   font-size: 8px;
   letter-spacing: .08em
@@ -1065,24 +1101,24 @@ input: :placeholder,textarea::placeholder {
   max-width: 650px;
   font-size: 15px;
   line-height: 1.8;
-  color: #656b69;
+  color: var(--color-tone-676c6b);
   margin: 30px 0 50px
 }
 
 .detail-placeholder {
   min-height: 190px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 25px;
   font-size: 9px;
   letter-spacing: .13em;
-  color: #838987
+  color: var(--color-tone-838987)
 }
 
 .detail-placeholder span {
-  color: var(--orange)
+  color: var(--color-accent)
 }
 
 .detail-page .footer {
@@ -1166,9 +1202,9 @@ input: :placeholder,textarea::placeholder {
     left: 0;
     right: 0;
     padding: 12px 18px 20px;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 15px 20px rgba(30,35,35,.08);
+    background: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 15px 20px var(--color-overlay-rgba-30-35-35-08);
     flex-direction: column;
     align-items: stretch;
     gap: 0
@@ -1179,7 +1215,7 @@ input: :placeholder,textarea::placeholder {
   .nav>button:not(.button) {
     text-align: left;
     padding: 14px 0;
-    border-bottom: 1px solid #e1e2de
+    border-bottom: 1px solid var(--color-tone-e0e1dc)
   }
   .nav .nav-cta {
     margin: 13px 0 0
@@ -1267,7 +1303,7 @@ input: :placeholder,textarea::placeholder {
     min-height: 164px;
     padding: 20px 35px 20px 0;
     border-right: 0;
-    border-bottom: 1px solid var(--line)
+    border-bottom: 1px solid var(--color-border)
   }
   .scenario:last-child {
     border-bottom: 0
@@ -1349,7 +1385,7 @@ input: :placeholder,textarea::placeholder {
   .brand-card {
     height: 150px;
     padding: 15px 10px 15px 0;
-    border-bottom: 1px solid var(--line)
+    border-bottom: 1px solid var(--color-border)
   }
   .brand-card+.brand-card {
     padding-left: 13px
