@@ -4,6 +4,8 @@ import AdminPage from './components/AdminPage';
 import FadoPage from './components/FadoPage';
 import FadoHeatPumpArticle from './components/FadoHeatPumpArticle';
 import HeatPumpFitArticle from './components/HeatPumpFitArticle';
+import RadiatoryTeplaPidlohaArticle from './components/RadiatoryTeplaPidlohaArticle';
+import CopScopArticle from './components/CopScopArticle';
 import LgThermaVPage from './components/LgThermaVPage';
 import ViessmannPage from './components/ViessmannPage';
 import SiteHeader from './components/SiteHeader';
@@ -34,6 +36,8 @@ function viewFromPath(): View {
     const slug = parts[1] || '';
     if (slug === 'teplovi-nasosy-fado') return { kind: 'article', title: 'Теплові насоси FADO' };
     if (slug === 'chi-pidiide-vam-teplovyi-nasos') return { kind: 'article', title: 'Чи підійде вам тепловий насос?' };
+    if (slug === 'cop-i-scop') return { kind: 'article', title: 'COP і SCOP: як читати показники ефективності теплового насоса' };
+    if (slug === 'radiatory-chy-tepla-pidloha') return { kind: 'article', title: 'Радіатори чи тепла підлога?' };
     const found = articles.find(([title]) => title.toLowerCase().replace(/\s+/g, '-') === slug);
     return { kind: 'article', title: found?.[0] || slug.replace(/-/g, ' ') };
   }
@@ -63,6 +67,8 @@ function App() {
     const path = next.kind === 'home' ? '/' : next.kind === 'privacy' ? '/privacy' : next.kind === 'admin' ? '/admin'
       : next.kind === 'article' && next.title === 'Теплові насоси FADO' ? '/knowledge/teplovi-nasosy-fado/'
       : next.kind === 'article' && next.title === 'Чи підійде вам тепловий насос?' ? '/knowledge/chi-pidiide-vam-teplovyi-nasos/'
+      : next.kind === 'article' && next.title.startsWith('COP і SCOP:') ? '/knowledge/cop-i-scop/'
+      : next.kind === 'article' && next.title === 'Радіатори чи тепла підлога?' ? '/knowledge/radiatory-chy-tepla-pidloha/'
       : `/${next.kind === 'brand' ? 'brands' : 'knowledge'}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, '-'))}`;
     const basePath = import.meta.env.BASE_URL;
     window.history.pushState({}, '', `${basePath}${path.replace(/^\//, '')}`);
@@ -111,6 +117,8 @@ function App() {
 
   if (view.kind === 'admin') return <>{siteHeader}<AdminPage /></>;
   if (view.kind === 'article' && view.title === 'Чи підійде вам тепловий насос?') return <>{siteHeader}<HeatPumpFitArticle onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'article' && view.title.startsWith('COP і SCOP:')) return <>{siteHeader}<CopScopArticle onBack={() => navigate({ kind: 'home' })} /></>;
+  if (view.kind === 'article' && view.title === 'Радіатори чи тепла підлога?') return <>{siteHeader}<RadiatoryTeplaPidlohaArticle onBack={() => navigate({ kind: 'home' })} /></>;
   if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <>{siteHeader}<FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <>{siteHeader}<FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'lg') return <>{siteHeader}<LgThermaVPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;

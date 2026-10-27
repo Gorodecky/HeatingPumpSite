@@ -54,9 +54,10 @@ export default function MarkdownArticle({ source }: { source: string }) {
       continue;
     }
 
-    if (/^!\[[^\]]*\]\([^)]+\)$/.test(line)) {
-      const [caption, path] = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)!.slice(1);
-      blocks.push(<figure key={`image-${index}`}><img src={`${import.meta.env.BASE_URL}images/${path.split('/').pop()}`} alt={caption} loading="lazy" /><figcaption>{caption}</figcaption></figure>);
+    const imageMatch = /^!\[([^\]]*)\]\(([^\s)]+)(?:\s+"([^"]*)")?\)$/.exec(line);
+    if (imageMatch) {
+      const [, alt, path, caption] = imageMatch;
+      blocks.push(<figure key={`image-${index}`}><img src={`${import.meta.env.BASE_URL}images/${path.split('/').pop()}`} alt={alt} loading="lazy" />{caption && <figcaption>{caption}</figcaption>}</figure>);
       index += 1;
       continue;
     }

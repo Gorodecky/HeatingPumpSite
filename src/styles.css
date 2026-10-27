@@ -1206,6 +1206,7 @@ input: :placeholder,textarea::placeholder {
 .vitocal-article { display: block; padding: 68px 0 58px; border-bottom: 1px solid var(--color-border) }
 .vitocal-article-back { min-height: 42px; margin-bottom: 36px }
 .vitocal-article-header { max-width: 980px; margin: 0 auto 42px }
+.radiatory-article-page .vitocal-article-header { max-width: 900px }
 .vitocal-article-header h2 { margin: 0; font-size: clamp(36px,5vw,62px); font-weight: 500; letter-spacing: -.065em; line-height: 1.08 }
 .vitocal-article-header h1 { margin: 0; font-size: clamp(36px,5vw,62px); font-weight: 500; letter-spacing: -.065em; line-height: 1.08 }
 .tvd-article-meta { margin: 18px 0 0; color: var(--color-tone-8c9290); font-size: 11px }
@@ -1296,6 +1297,13 @@ input: :placeholder,textarea::placeholder {
 .fado-article-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--color-border); background: var(--color-tone-f7f7f4) }
 .fado-article-figure figcaption { margin-top: 9px; color: var(--color-tone-7c817f); font-size: 11px; line-height: 1.65 }
 .fado-article-body { max-width: 790px; margin: 0 auto }
+.cop-scop-title,.cop-scop-cover { width: min(100%,790px); margin-left: auto !important; margin-right: auto !important }
+.cop-scop-back { margin-bottom: 1em }
+.cop-scop-cover { margin-bottom: 14px }
+.cop-scop-cover figcaption { display: none }
+.cop-scop-table-wrap table { border-collapse: collapse }
+.cop-scop-table-wrap th,.cop-scop-table-wrap td { border: 1px solid var(--color-border) }
+.cop-scop-table-wrap th { background: var(--color-tone-f7f7f4) }
 .fado-article-body section { margin: 0 0 36px }
 .fado-article-body h2 { margin: 0 0 13px; font-size: clamp(24px,3vw,34px); font-weight: 500; letter-spacing: -.05em; line-height: 1.18 }
 .fado-article-body p,.fado-article-body li { color: var(--color-tone-4c5050); font-size: 14px; line-height: 1.85 }
