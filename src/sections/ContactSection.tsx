@@ -5,7 +5,7 @@ export default function ContactSection({ message, consent, onConsentChange, stat
   return <section className="section contact-section" id="contact">
     <div className="container contact-layout">
       <div>
-        <SectionHead n="05" label="ЗВ’ЯЗОК" title={<>Є питання?<br /><span>Напишіть нам.</span></>} intro="Залиште номер телефону й короткий коментар — у робочій версії ми зв’яжемося з вами." />
+        <SectionHead label="ЗВ’ЯЗОК" title={<>Є питання?<br /><span>Напишіть нам.</span></>} intro="Залиште номер телефону й короткий коментар — у робочій версії ми зв’яжемося з вами." />
         <div className="contact-place"><span className="orange-dot" />Вінниця та область</div>
       </div>
       <form className="contact-form" onSubmit={onSubmit}>

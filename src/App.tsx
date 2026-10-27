@@ -3,6 +3,7 @@ import DetailPage from './components/DetailPage';
 import AdminPage from './components/AdminPage';
 import FadoPage from './components/FadoPage';
 import FadoHeatPumpArticle from './components/FadoHeatPumpArticle';
+import HeatPumpFitArticle from './components/HeatPumpFitArticle';
 import LgThermaVPage from './components/LgThermaVPage';
 import ViessmannPage from './components/ViessmannPage';
 import SiteHeader from './components/SiteHeader';
@@ -32,6 +33,7 @@ function viewFromPath(): View {
   if (parts[0] === 'knowledge') {
     const slug = parts[1] || '';
     if (slug === 'teplovi-nasosy-fado') return { kind: 'article', title: 'Теплові насоси FADO' };
+    if (slug === 'chi-pidiide-vam-teplovyi-nasos') return { kind: 'article', title: 'Чи підійде вам тепловий насос?' };
     const found = articles.find(([title]) => title.toLowerCase().replace(/\s+/g, '-') === slug);
     return { kind: 'article', title: found?.[0] || slug.replace(/-/g, ' ') };
   }
@@ -60,6 +62,7 @@ function App() {
     setMenuOpen(false);
     const path = next.kind === 'home' ? '/' : next.kind === 'privacy' ? '/privacy' : next.kind === 'admin' ? '/admin'
       : next.kind === 'article' && next.title === 'Теплові насоси FADO' ? '/knowledge/teplovi-nasosy-fado/'
+      : next.kind === 'article' && next.title === 'Чи підійде вам тепловий насос?' ? '/knowledge/chi-pidiide-vam-teplovyi-nasos/'
       : `/${next.kind === 'brand' ? 'brands' : 'knowledge'}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, '-'))}`;
     const basePath = import.meta.env.BASE_URL;
     window.history.pushState({}, '', `${basePath}${path.replace(/^\//, '')}`);
@@ -107,6 +110,7 @@ function App() {
   };
 
   if (view.kind === 'admin') return <>{siteHeader}<AdminPage /></>;
+  if (view.kind === 'article' && view.title === 'Чи підійде вам тепловий насос?') return <>{siteHeader}<HeatPumpFitArticle onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <>{siteHeader}<FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <>{siteHeader}<FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'lg') return <>{siteHeader}<LgThermaVPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
@@ -131,15 +135,38 @@ function App() {
       <div className="container">
         <div className="footer-main">
           <div>
-            <button className="wordmark footer-mark" onClick={() => goTo('home')}><span className="mark">Т<span>.</span></span><span>Тепло поруч<small>ТЕПЛОВІ РІШЕННЯ</small></span></button>
-            <p className="footer-promise">Продуманий підбір тепла<br />починається з діалогу.</p>
+            <button className="wordmark footer-mark" onClick={() => goTo('home')}>
+              <span className="mark">Т<span>.</span></span>
+              <span>ПП TVD<small>РІШЕННЯ ДЛЯ ТЕПЛА</small></span></button>
+            <p className="footer-promise">Продуманий підбір обладнання для тепла<br />починається з діалогу.</p>
           </div>
-          <div className="footer-column"><span>НАВІГАЦІЯ</span><button onClick={() => goTo('solutions')}>Рішення</button><button onClick={() => goTo('brands')}>Бренди</button><button onClick={() => goTo('knowledge')}>База знань</button></div>
-          <div className="footer-column"><span>ЗВ’ЯЗОК</span><button onClick={() => goTo('contact')}>Залишити запит ↗</button><p>Телефон: <i>заглушка</i></p><p>Адреса: <i>заглушка</i></p></div>
-          <div className="footer-column"><span>ГЕОГРАФІЯ</span><p>Вінниця та Вінницька область</p><button onClick={() => navigate({ kind: 'privacy' })}>Політика конфіденційності</button></div>
+          <div className="footer-column">
+            <span>НАВІГАЦІЯ</span>
+            <button onClick={() => goTo('solutions')}>Рішення</button>
+            <button onClick={() => goTo('brands')}>Бренди</button>
+            <button onClick={() => goTo('knowledge')}>База знань</button></div>
+          <div className="footer-column">
+            <span>ЗВ’ЯЗОК</span>
+            <button onClick={() => goTo('contact')}>Залишити запит ↗</button>
+            <p>Телефон: <i>+38(063)878-82-81</i></p>
+            <p>Адреса:{' '}
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Вінниця%2C%20вул.%20Бучми%2C%20126"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i>м. Вінниця, вул. Бучми, 126</i>
+              </a>
+            </p>
+          </div>
+          <div className="footer-column">
+            <span>ГЕОГРАФІЯ</span>
+            <p>Поділля</p>
+            <button onClick={() => navigate({ kind: 'privacy' })}>Політика конфіденційності</button>
+          </div>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Тепло поруч · Назва тимчасова</span><span>Контактні дані будуть додані після підтвердження</span><button onClick={() => goTo('home')}>НАГОРУ ↑</button>
+          <span>© {new Date().getFullYear()} Городецький В.</span><span>Вінниця</span><button onClick={() => goTo('home')}>НАГОРУ ↑</button>
         </div>
       </div>
     </footer>

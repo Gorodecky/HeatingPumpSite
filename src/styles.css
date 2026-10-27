@@ -419,21 +419,10 @@ a {
 
 .section-head {
   display: grid;
-  grid-template-columns: 75px 1fr .75fr;
+  grid-template-columns: 1fr .75fr;
   gap: 20px;
   align-items: start;
   margin-bottom: 45px
-}
-
-.section-index {
-  padding-top: 6px;
-  color: var(--color-accent);
-  font-size: 10px;
-  letter-spacing: .08em
-}
-
-.section-index span {
-  color: var(--color-tone-9a9e9b)
 }
 
 .section-head .eyebrow {
@@ -607,10 +596,6 @@ a {
 .form-aside .section-head {
   display: block;
   margin: 0
-}
-
-.form-aside .section-head .section-index {
-  margin-bottom: 28px
 }
 
 .form-aside .section-intro {
@@ -951,10 +936,6 @@ input: :placeholder,textarea::placeholder {
 .contact-section .section-head {
   display: block;
   margin: 0
-}
-
-.contact-section .section-head .section-index {
-  margin-bottom: 26px
 }
 
 .contact-section .section-intro {
@@ -1325,6 +1306,30 @@ input: :placeholder,textarea::placeholder {
 .article-cta h2 { margin: 0; font-size: clamp(26px,4vw,40px); line-height: 1.13; font-weight: 500; letter-spacing: -.05em }
 .article-source-note { max-width: 790px; margin: 22px auto 0; color: var(--color-tone-8c9290); font-size: 10px; line-height: 1.7 }
 
+.fit-article { width: min(960px,calc(100% - 64px)); padding-top: 60px; padding-bottom: 82px }
+.fit-article h1 { max-width: 790px; margin: 0; font-size: clamp(42px,5.4vw,68px); font-weight: 500; letter-spacing: -.075em; line-height: 1.04 }
+.fit-article .article-intro { margin-bottom: 10px }
+.fit-lead-list { max-width: 790px; margin: 0 0 14px; padding-left: 22px; color: var(--color-tone-4c5050) }
+.fit-lead-list li,.fit-lead-note { font-size: 14px; line-height: 1.85 }
+.fit-lead-list li { padding-left: 3px; margin-bottom: 7px }
+.fit-lead-note { max-width: 790px; margin: 0 0 32px; color: var(--color-tone-4c5050) }
+.fit-article-image { display: block; width: 100%; max-height: 490px; aspect-ratio: 1.5; object-fit: cover; margin-bottom: 52px }
+.fit-article-body { max-width: 790px; margin: 0 }
+.fit-article-body section { margin: 0 0 36px }
+.fit-article-body h2 { margin: 0 0 13px; font-size: clamp(24px,3vw,34px); font-weight: 500; letter-spacing: -.05em; line-height: 1.18 }
+.fit-article-body h3 { margin: 24px 0 10px; font-size: 19px; font-weight: 500; letter-spacing: -.035em }
+.fit-article-body p,.fit-article-body li { color: var(--color-tone-4c5050); font-size: 14px; line-height: 1.85 }
+.fit-article-body p { margin: 0 0 14px }
+.fit-article-body ul { padding-left: 22px; margin: 12px 0 }
+.fit-article-body li { padding-left: 3px; margin-bottom: 7px }
+.fit-article-body figure { margin: 25px 0 0 }
+.fit-article-body figure img { display: block; width: 100%; height: auto; border: 1px solid var(--color-border); background: var(--color-tone-f7f7f4) }
+.fit-article-body figcaption { margin-top: 9px; color: var(--color-tone-7c817f); font-size: 11px; line-height: 1.65 }
+.fit-table-wrap { overflow-x: auto; margin: 22px 0 }
+.fit-table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 12px; line-height: 1.65 }
+.fit-table th,.fit-table td { padding: 12px; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top }
+.fit-table th { background: var(--color-tone-f7f7f4); font-weight: 600 }
+
 @media(max-width:900px) {
   .container {
     width: min(100% - 42px,740px)
@@ -1480,7 +1485,7 @@ input: :placeholder,textarea::placeholder {
     padding: 72px 0
   }
   .section-head {
-    grid-template-columns: 30px 1fr;
+    grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 30px
   }
@@ -1492,13 +1497,10 @@ input: :placeholder,textarea::placeholder {
     margin-bottom: 14px
   }
   .section-intro {
-    grid-column: 2;
+    grid-column: 1;
     margin: 0!important;
     font-size: 11px;
     max-width: 420px
-  }
-  .section-index {
-    font-size: 9px
   }
   .scenario-grid {
     grid-template-columns: 1fr
@@ -1550,15 +1552,10 @@ input: :placeholder,textarea::placeholder {
     gap: 33px
   }
   .form-aside .section-head {
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    gap: 10px
-  }
-  .form-aside .section-head .section-index {
-    margin: 0
+    display: block
   }
   .form-aside .section-intro {
-    grid-column: 2
+    grid-column: 1
   }
   .form-aside-note {
     margin-top: 22px
@@ -1763,6 +1760,14 @@ input: :placeholder,textarea::placeholder {
   .fado-article-image { aspect-ratio: 1.3; margin-bottom: 34px }
   .fado-article-body h2 { font-size: 26px }
   .fado-article-body p,.fado-article-body li { font-size: 13px }
+  .fit-article { padding-top: 34px; padding-bottom: 54px }
+  .fit-article { width: min(100% - 42px,740px) }
+  .fit-article h1 { font-size: 42px }
+  .fit-article-image { aspect-ratio: 1.3; margin-bottom: 34px }
+  .fit-article-body h2 { font-size: 26px }
+  .fit-article-body h3 { font-size: 18px }
+  .fit-article-body p,.fit-article-body li,.fit-lead-list li,.fit-lead-note { font-size: 13px }
+  .fit-article .article-cta { align-items: flex-start; flex-direction: column }
   .article-catalog-note { padding: 19px }
   .article-cta { align-items: flex-start; flex-direction: column; padding: 25px 0 }
 }

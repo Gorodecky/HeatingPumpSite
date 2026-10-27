@@ -19,8 +19,8 @@ export default function SelectionSection({ form, step, message, status, onPatch,
   return <section className="section selection-section" id="selection">
     <div className="container form-layout">
       <div className="form-aside">
-        <SectionHead n="02" label="ПОПЕРЕДНІЙ ПІДБІР" title={<>Розкажіть<br /><span>про будинок.</span></>} intro="Кілька запитань допоможуть підготуватися до розмови. Це не калькулятор потужності, вартості експлуатації чи окупності." />
-        <div className="form-aside-note"><span>!</span> Для точного рішення потрібен інженерний розрахунок тепловтрат і перевірка умов об’єкта.</div>
+        <SectionHead label="ПОПЕРЕДНІЙ ПІДБІР" title={<>Розкажіть<br /><span>про свій будинок.</span></>} intro="Кілька запитань допоможуть підготуватися до розмови. Це не калькулятор потужності, вартості експлуатації чи окупності." />
+        <div className="form-aside-note"><span>!</span> Для точного рішення потрібен інженерний розрахунок теплових втрат і перевірка умов об’єкта.</div>
       </div>
       <form className="selection-form" onSubmit={onSubmit}>
         <div className="step-top"><span>КРОК {step} З 3</span><span className="step-progress"><i style={{ width: `${step * 33.333}%` }} /></span></div>
