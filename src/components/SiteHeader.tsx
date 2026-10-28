@@ -13,7 +13,7 @@ export default function SiteHeader({ menuOpen, onToggleMenu, onNavigate }: {
     <header className="header">
       <div className="container header-inner">
         <button className="wordmark" onClick={() => onNavigate('home')} aria-label="Тепло поруч — на головну">
-          <span className="mark" aria-hidden="true">Т<span>.</span></span><span>ПП TVD<small> РІШЕННЯ ДЛЯ ТЕПЛА</small></span>
+          <img className="wordmark-logo" src={`${import.meta.env.BASE_URL}images/logo_tvd_new2.png`} alt="" /><span>ПП TVD<small> РІШЕННЯ ДЛЯ ТЕПЛА</small></span>
         </button>
         <button className="menu-toggle" aria-label={menuOpen ? 'Закрити меню' : 'Відкрити меню'} aria-expanded={menuOpen} onClick={onToggleMenu}>{menuOpen ? '×' : '☰'}</button>
         <nav className={menuOpen ? 'nav open' : 'nav'} aria-label="Головна навігація">

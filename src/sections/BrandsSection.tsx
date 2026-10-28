@@ -5,9 +5,9 @@ export default function BrandsSection({ brands, onBrand }: { brands: readonly st
     <div className="container">
       <SectionHead label="БРЕНДИ" title={<>Виробників, які<br /><span>ми рекомендуємо.</span></>} intro="Сторінки брендів допоможуть Вам самостійно розібратися про виробників теплових насосів які представлені у нас." />
       <div className="brand-grid">{brands.map((brand, i) => <button className="brand-card" key={brand} onClick={() => onBrand(brand)}>
-        <span className="brand-num">0{i + 1} / БРЕНД</span><span className="brand-name">{brand}</span><span className="brand-detail">{brand === 'Viessmann' ? 'Vitocal · моноблоки та спліт' : 'Огляд і офіційні дані'}</span><span className="brand-arrow" aria-hidden="true">↗</span>
+        <span className="brand-num">0{i + 1} / БРЕНД</span><span className="brand-name">{brand}</span><span className="brand-detail">{brand === 'Viessmann' ? 'Vitocal · моноблоки та спліт' : 'Огляд і офіційні дані'}</span>{brand === 'Viessmann' && <span className="brand-price">від €6 472</span>}<span className="brand-arrow" aria-hidden="true">↗</span>
       </button>)}</div>
-      <p className="accuracy-note"><span>i</span> Модельні характеристики, ціни та сумісність не наведено: їх потрібно перевірити за офіційною документацією.</p>
+      <p className="accuracy-note"><span>i</span> Детальні модельні характеристики та сумісність потрібно перевірити за офіційною документацією.</p>
     </div>
   </section>;
 }

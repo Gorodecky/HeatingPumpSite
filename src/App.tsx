@@ -144,7 +144,7 @@ function App() {
         <div className="footer-main">
           <div>
             <button className="wordmark footer-mark" onClick={() => goTo('home')}>
-              <span className="mark">Т<span>.</span></span>
+              <img className="wordmark-logo footer-logo" src={`${import.meta.env.BASE_URL}images/logo_tvd_new2.png`} alt="" />
               <span>ПП TVD<small>РІШЕННЯ ДЛЯ ТЕПЛА</small></span></button>
             <p className="footer-promise">Продуманий підбір обладнання для тепла<br />починається з діалогу.</p>
           </div>
