@@ -13,8 +13,7 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
           <button className="button button-dark" onClick={onContact}>Обговорити підбір <span>↗</span></button>
         </div>
         <figure className="lg-hero-figure">
-          <img src={`${import.meta.env.BASE_URL}images/D01_global-lowtemperature-hero-1-d.avif`} alt="Тепловий насос LG THERMA V з офіційного зображення LG Україна" />
-          <figcaption>Зображення THERMA V: <a href="https://www.lg.com/ua/business/heating-split-410a" target="_blank" rel="noreferrer">офіційна сторінка LG Україна</a>.</figcaption>
+          <img src={`${import.meta.env.BASE_URL}images/lg-therma-v-lifestyle-17-monobloc.jpg`} alt="Зовнішній блок LG THERMA V біля будинку взимку" />
         </figure>
       </section>
 
@@ -34,6 +33,10 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
         </div>
       </section>
 
+      <figure className="lg-overview-visual">
+        <img src={`${import.meta.env.BASE_URL}images/lg-therma-v-lifestyle-25-hydrosplit-outdoor.jpg`} alt="Зовнішній блок LG THERMA V біля сучасного будинку взимку" loading="lazy" />
+      </figure>
+
       <section className="lg-features">
         <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />КОНСТРУКЦІЯ</p><h2>Компресор R1<br /><span>і керування системою.</span></h2></div>
         <div className="lg-feature-list">
@@ -48,18 +51,17 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
 
       <figure className="lg-official-visual">
         <img src={`${import.meta.env.BASE_URL}images/lg-therma-v-official-control.jpg`} alt="Тепловий насос LG THERMA V біля будинку та схема інтелектуального датчика" loading="lazy" />
-        <figcaption>Інфографіка інтелектуального датчика температури й тиску: <a href="https://www.lg.com/ua/business/heating-split-410a" target="_blank" rel="noreferrer">LG Україна</a>.</figcaption>
       </figure>
 
       <section className="lg-features lg-fan-tech" aria-labelledby="lg-fan-title">
-        <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />ПЕРЕДОВІ ТЕХНОЛОГІЇ ВЕНТИЛЯТОРА</p><h2 id="lg-fan-title">Більше повітряного потоку. Менше шуму.</h2><p>Каталог пов’язує цю конструкцію з інверторним двигуном BLDC та вдосконаленою геометрією вентилятора.</p></div>
+        <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />ПЕРЕДОВІ ТЕХНОЛОГІЇ ВЕНТИЛЯТОРА</p><h2 id="lg-fan-title">Більше повітряного потоку. Менше шуму.</h2><p>Виробник пов’язує цю конструкцію з інверторним двигуном BLDC та вдосконаленою геометрією вентилятора.</p></div>
         <div className="lg-fan-content">
-          <p>Двигун BLDC і перероблена форма лопатей мають підтримувати потрібний потік повітря зі зниженим рівнем шуму. Це каталожний опис технології; фактичне звучання залежить від режиму, місця встановлення та акустики ділянки.</p>
-          <div className="lg-noise-values" aria-label="Показники шуму за каталогом для потужностей 12, 14 і 16 кВт">
+          <p>Двигун BLDC і перероблена форма лопатей мають підтримувати потрібний потік повітря зі зниженим рівнем шуму. Це теоретичний опис технології; фактичне звучання залежить від режиму, місця встановлення та акустики ділянки.</p>
+          <div className="lg-noise-values" aria-label="Показники шуму за для потужностей 12, 14 і 16 кВт">
             <div><span>Звукова потужність, опалення</span><strong>63 · 64 · 65 <small>дБ(A)</small></strong><p>12 · 14 · 16 кВт</p></div>
             <div><span>Звуковий тиск на відстані 1 м</span><strong>55 · 56 · 57 <small>дБ(A)</small></strong><p>12 · 14 · 16 кВт</p></div>
           </div>
-          <p className="lg-noise-note">У порівняльній таблиці каталогу для конкурентних моделей наведено 66 дБ(A) звукової потужності та 58 дБ(A) звукового тиску на 1 м. Порівнюйте ці значення лише з урахуванням умов вимірювання, зазначених виробником.</p>
+          <p className="lg-noise-note">У порівняльній таблиці для конкурентних моделей наведено 66 дБ(A) звукової потужності та 58 дБ(A) звукового тиску на 1 м. Порівнюйте ці значення лише з урахуванням умов вимірювання, зазначених виробником.</p>
         </div>
       </section>
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" role="img" aria-labelledby="title">
+  <title id="title">LG</title>
+  <circle cx="200" cy="200" r="180" fill="#a50034"/>
+  <path d="M200 60a140 140 0 1 0 140 140" fill="none" stroke="#fff" stroke-width="14"/>
+  <circle cx="145" cy="145" r="17" fill="#fff"/>
+  <path d="M200 120v160h58M250 200h90v45" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/>
+  <text x="410" y="295" fill="#6d6e71" font-family="Arial, Helvetica, sans-serif" font-size="300" font-weight="700" letter-spacing="-14">LG</text>
+</svg>

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import DetailPage from './components/DetailPage';
 import AdminPage from './components/AdminPage';
 import FadoPage from './components/FadoPage';
+import AuxPage from './components/AuxPage';
 import FadoHeatPumpArticle from './components/FadoHeatPumpArticle';
 import HeatPumpFitArticle from './components/HeatPumpFitArticle';
 import RadiatoryTeplaPidlohaArticle from './components/RadiatoryTeplaPidlohaArticle';
@@ -121,6 +122,7 @@ function App() {
   if (view.kind === 'article' && view.title === 'Радіатори чи тепла підлога?') return <>{siteHeader}<RadiatoryTeplaPidlohaArticle onBack={() => navigate({ kind: 'home' })} /></>;
   if (view.kind === 'article' && view.title.toLowerCase() === 'теплові насоси fado') return <>{siteHeader}<FadoHeatPumpArticle onBack={() => navigate({ kind: 'brand', title: 'FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'fado') return <>{siteHeader}<FadoPage onBack={() => navigate({ kind: 'home' })} onArticle={() => navigate({ kind: 'article', title: 'Теплові насоси FADO' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
+  if (view.kind === 'brand' && view.title.toLowerCase() === 'aux') return <>{siteHeader}<AuxPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'lg') return <>{siteHeader}<LgThermaVPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand' && view.title.toLowerCase() === 'viessmann') return <>{siteHeader}<ViessmannPage onBack={() => navigate({ kind: 'home' })} onContact={() => { navigate({ kind: 'home' }); window.setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 40); }} /></>;
   if (view.kind === 'brand') return <>{siteHeader}<DetailPage eyebrow="Бренд" title={view.title} onBack={() => navigate({ kind: 'home' })} text="Сторінка бренду готова для наповнення перевіреними даними: офіційні серії обладнання, документація, умови застосування та доступність у регіоні. Технічні характеристики, ціни й сумісність буде додано після перевірки офіційних джерел." /></>;
