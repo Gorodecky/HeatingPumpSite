@@ -7,7 +7,7 @@ export default function SiteHeader({ menuOpen, onToggleMenu, onNavigate }: {
     <div className="topbar">
       <div className="container topbar-inner">
         <span>Теплові насоси · ПП TVD · Вінниця, Бучми, 126</span>
-        <button className="topbar-link" onClick={() => onNavigate('contact')}>Зв’язатися <span aria-hidden="true">↗</span></button>
+        <a className="topbar-link" href="tel:+380638788281">+38 (063) 878-82-81 <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <header className="header">

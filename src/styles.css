@@ -972,6 +972,19 @@ input: :placeholder,textarea::placeholder {
   margin-top: 21px
 }
 
+.contact-callout {
+  margin: 16px 0 0;
+  color: var(--color-tone-757a78);
+  font-size: 11px;
+  line-height: 1.6
+}
+
+.contact-callout a {
+  color: var(--color-tone-4c5050);
+  text-decoration: underline;
+  text-underline-offset: 3px
+}
+
 .optional {
   font-weight: 400;
   color: var(--color-tone-9a9e9b);
@@ -1399,6 +1412,12 @@ input: :placeholder,textarea::placeholder {
   .topbar {
     height: 34px;
     font-size: 8px
+  }
+  .topbar-inner {
+    justify-content: flex-end
+  }
+  .topbar-inner>span {
+    display: none
   }
   .header {
     height: 66px

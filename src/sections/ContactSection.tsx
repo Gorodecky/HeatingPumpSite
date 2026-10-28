@@ -17,6 +17,7 @@ export default function ContactSection({ message, consent, onConsentChange, stat
           <span>Погоджуюся на обробку персональних даних, щоб отримати відповідь на це звернення. <a href="/privacy" className="inline-link" onClick={event => { event.preventDefault(); onPrivacy(); }}>Політика конфіденційності</a></span>
         </label>
         <button className="button button-dark" type="submit" disabled={status === 'sending'}>{status === 'sending' ? 'Надсилаємо…' : <>Надіслати запит <span>↗</span></>}</button>
+        <p className="contact-callout">Або зателефонуйте нам: <a href="tel:+380638788281">+38 (063) 878-82-81</a></p>
         {status === 'sending' && <p className="form-message" role="status">Надсилаємо запит…</p>}
         {message && <p className="form-message" role={status === 'error' ? 'alert' : 'status'}>{message}</p>}
         <p className="privacy-hint">Демонстраційний режим: повідомлення не надсилається.</p>
