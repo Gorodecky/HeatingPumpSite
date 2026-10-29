@@ -798,6 +798,15 @@ input: :placeholder,textarea::placeholder {
   color: var(--color-accent)
 }
 
+.brand-card img.brand-name {
+  transition: filter .18s ease
+}
+
+.brand-card:hover img.brand-name,
+.brand-card:focus-visible img.brand-name {
+  filter: brightness(.88)
+}
+
 .brand-num {
   font-size: 8px;
   color: var(--color-tone-8c9290);
@@ -812,6 +821,13 @@ input: :placeholder,textarea::placeholder {
   transition: color .18s
 }
 
+.brand-logo-viessmann {
+  width: min(100%, 160px);
+  height: 40px;
+  object-fit: contain;
+  object-position: left center
+}
+
 .brand-logo-lg {
   width: 100px;
   height: 40px;
@@ -822,6 +838,13 @@ input: :placeholder,textarea::placeholder {
 .brand-logo-aux {
   width: 116px;
   height: 42px;
+  object-fit: contain;
+  object-position: left center
+}
+
+.brand-logo-fado {
+  width: min(100%, 136px);
+  height: 43px;
   object-fit: contain;
   object-position: left center
 }
