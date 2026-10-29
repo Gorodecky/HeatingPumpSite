@@ -9,6 +9,7 @@ import RadiatoryTeplaPidlohaArticle from "./components/RadiatoryTeplaPidlohaArti
 import CopScopArticle from "./components/CopScopArticle";
 import LgThermaVPage from "./components/LgThermaVPage";
 import ViessmannPage from "./components/ViessmannPage";
+import InstallationCostsArticle from "./components/InstallationCostsArticle";
 import SiteHeader from "./components/SiteHeader";
 import { articles, brands, type SelectionForm } from "./data/siteContent";
 import BrandsSection from "./sections/BrandsSection";
@@ -255,6 +256,22 @@ function App() {
         {siteHeader}
         <RadiatoryTeplaPidlohaArticle
           onBack={() => navigate({ kind: "home" })}
+        />
+      </>
+    );
+  if (view.kind === "article" && view.title === "Витрати та етапи монтажу")
+    return (
+      <>
+        {siteHeader}
+        <InstallationCostsArticle
+          onBack={() => navigate({ kind: "home" })}
+          onContact={() => {
+            navigate({ kind: "home" });
+            window.setTimeout(
+              () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }),
+              40,
+            );
+          }}
         />
       </>
     );
