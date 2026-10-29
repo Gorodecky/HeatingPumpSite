@@ -9,7 +9,7 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
           <p className="eyebrow"><span className="eyebrow-line" />ВИРОБНИК · ТЕПЛОВІ НАСОСИ</p>
           <h1>THERMA V</h1>
           <p className="lg-model-name">R410A Split · R1 Compressor</p>
-          <p className="fado-lead">Повітряний тепловий насос LG для опалення та гарячого водопостачання. Офіційна сторінка THERMA V R410A Split описує оновлений корпус, контролер і функції керування системою; нижче окремо наведені параметри R1 Compressor з наданого каталогу.</p>
+          <p className="fado-lead">Повітряний тепловий насос LG для опалення та гарячого водопостачання THERMA V R410A Split має оновлений корпус, контролер і функції керування системою; нижче окремо наведені параметри R1 Compressor з какталогу виробника.</p>
           <button className="button button-dark" onClick={onContact}>Обговорити підбір <span>↗</span></button>
         </div>
         <figure className="lg-hero-figure">
@@ -24,7 +24,7 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
       </section>
 
       <section className="lg-overview">
-        <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />ЛІНІЙКА</p><h2>Три типорозміри.<br /><span>Дві схеми живлення.</span></h2><p>Каталог наводить версії 1-фазного живлення 220–240 В і 3-фазного 380–415 В. Конкретну сумісність із мережею потрібно перевірити за повним кодом блока.</p></div>
+        <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />ЛІНІЙКА</p><h2>Три типорозміри.<br /><span>Дві схеми живлення.</span></h2><p>Існують версії 1-фазного живлення 220–240 В і 3-фазного 380–415 В. Конкретну сумісність із мережею потрібно перевірити за повним кодом блока.</p></div>
         <div className="lg-capacity-grid">
           {[12, 14, 16].map((power, index) => <article className="lg-capacity-card" key={power}>
             <span>0{index + 1} / THERMA V R1</span><strong>{power}<small>кВт</small></strong>
@@ -40,12 +40,12 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
       <section className="lg-features">
         <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />КОНСТРУКЦІЯ</p><h2>Компресор R1<br /><span>і керування системою.</span></h2></div>
         <div className="lg-feature-list">
-          <article><span>01</span><div><h3>R1 Scroll Compressor</h3><p>У каталозі R1 описано як спіральний компресор LG. Для тепловіддачі важливі фактичні умови роботи системи та обрана температура води.</p></div></article>
-          <article><span>02</span><div><h3>Контролер із кольоровим сенсорним екраном</h3><p>LG вказує 4,3-дюймовий кольоровий LCD, скляну передню панель і сенсорне LED-керування. На екрані можна переглядати та налаштовувати параметри системи.</p></div></article>
+          <article><span>01</span><div><h3>R1 Scroll Compressor</h3><p>Новітній покращений компрессор від  LG R1 має спіральну будову. Для тепловіддачі важливі фактичні умови роботи системи та обрана температура води.</p></div></article>
+          <article><span>02</span><div><h3>Контролер із кольоровим сенсорним екраном</h3><p>4,3-дюймовий кольоровий LCD дісплей має скляну передню панель і сенсорне LED-керування. На екрані можна переглядати та налаштовувати параметри системи.</p></div></article>
           <article><span>03</span><div><h3>Сезонне автоматичне керування</h3><p>Автоматичний сезонний режим коригує налаштування опалення, охолодження та гарячої води залежно від зовнішньої температури.</p></div></article>
-          <article><span>04</span><div><h3>Датчик тиску для швидшої реакції</h3><p>За описом LG, датчик безпосередньо вимірює тиск у холодильному контурі, щоб точніше реагувати на зміну навантаження. Візуальна схема системи також показує зовнішній блок.</p></div></article>
-          <article><span>05</span><div><h3>Резервна робота при помилках</h3><p>LG описує аварійний режим: за незначних помилок датчиків система може продовжити цикл теплового насоса, а за серйозної несправності холодильного контуру — перейти на електричний нагрівач.</p></div></article>
-          <article><span>06</span><div><h3>Діапазон і покриття в серії R1</h3><p>Для R1 Compressor каталог зазначає покриття Gold Fin та роботу на опалення за зовнішньої температури від −25 до +35 °C. Це межі роботи, а не однакова теплова потужність у всіх умовах.</p></div></article>
+          <article><span>04</span><div><h3>Датчик тиску для швидшої реакції</h3><p>Датчик безпосередньо вимірює тиск у холодильному контурі, щоб точніше реагувати на зміну навантаження.</p></div></article>
+          <article><span>05</span><div><h3>Резервна робота при помилках</h3><p>При аварійному режимі за незначних помилок датчиків система може продовжити цикл теплового насоса, а за серйозної несправності холодильного контуру — перейти на електричний нагрівач.</p></div></article>
+          <article><span>06</span><div><h3>Діапазон і покриття в серії R1</h3><p>R1 Compressor має покриття Gold Fin та роботу на опалення за зовнішньої температури від −25 до +35 °C. Це межі роботи, а не однакова теплова потужність у всіх умовах.</p></div></article>
         </div>
       </section>
 
@@ -54,14 +54,16 @@ export default function LgThermaVPage({ onBack, onContact }: { onBack: () => voi
       </figure>
 
       <section className="lg-features lg-fan-tech" aria-labelledby="lg-fan-title">
-        <div className="lg-section-heading"><p className="eyebrow"><span className="eyebrow-line" />ПЕРЕДОВІ ТЕХНОЛОГІЇ ВЕНТИЛЯТОРА</p><h2 id="lg-fan-title">Більше повітряного потоку. Менше шуму.</h2><p>Виробник пов’язує цю конструкцію з інверторним двигуном BLDC та вдосконаленою геометрією вентилятора.</p></div>
+        <div className="lg-section-heading"><p className="eyebrow">
+          <span className="eyebrow-line" />ПЕРЕДОВІ ТЕХНОЛОГІЇ ВЕНТИЛЯТОРА</p>
+          <h2 id="lg-fan-title">Більше повітряного потоку. Менше шуму.</h2>
+          <p>LG THERMA V має інверторний двигун BLDC з вдосконаленою геометрією вентилятора.</p></div>
         <div className="lg-fan-content">
-          <p>Двигун BLDC і перероблена форма лопатей мають підтримувати потрібний потік повітря зі зниженим рівнем шуму. Це теоретичний опис технології; фактичне звучання залежить від режиму, місця встановлення та акустики ділянки.</p>
+          <p>Двигун BLDC і перероблена форма лопатей підтримують потрібний потік повітря зі зниженим рівнем шуму. Фактичне звучання залежить від режиму, місця встановлення та акустики ділянки.</p>
           <div className="lg-noise-values" aria-label="Показники шуму за для потужностей 12, 14 і 16 кВт">
             <div><span>Звукова потужність, опалення</span><strong>63 · 64 · 65 <small>дБ(A)</small></strong><p>12 · 14 · 16 кВт</p></div>
             <div><span>Звуковий тиск на відстані 1 м</span><strong>55 · 56 · 57 <small>дБ(A)</small></strong><p>12 · 14 · 16 кВт</p></div>
           </div>
-          <p className="lg-noise-note">У порівняльній таблиці для конкурентних моделей наведено 66 дБ(A) звукової потужності та 58 дБ(A) звукового тиску на 1 м. Порівнюйте ці значення лише з урахуванням умов вимірювання, зазначених виробником.</p>
         </div>
       </section>
 
