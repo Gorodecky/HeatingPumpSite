@@ -20,6 +20,12 @@ export default function InstallationCostsArticle({ onBack, onContact }: Props) {
           самого обладнання. Нижче — з чого складається проєкт, як відрізняються новий будинок і заміна твердопаливного котла та які дані допоможуть підготувати предметний кошторис.</p>
         <div className="fado-article-body">
           <section>
+            <figure className="install-scenario-image">
+              <img
+                src={`${import.meta.env.BASE_URL}images/heat-pump-vs-chimney.png`}
+                alt="Тепловий насос і димохід як два варіанти опалення будинку"
+              />
+            </figure>
             <h2>Два сценарії — різні вихідні умови</h2>
             <div className="install-scenario-grid">
               <article>
@@ -69,6 +75,12 @@ export default function InstallationCostsArticle({ onBack, onContact }: Props) {
           </section>
 
           <section>
+            <figure className="install-scenario-image">
+              <img
+                src={`${import.meta.env.BASE_URL}images/winter-house-heating-system.png`}
+                alt="Зимовий будинок із тепловим насосом і системою опалення"
+              />
+            </figure>
             <h2>Як проходить монтаж</h2>
             <div className="install-process-list">{process.map(([number, title, description]) => <article key={number}><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div></article>)}</div>
           </section>

@@ -2201,6 +2201,15 @@ input: :placeholder,textarea::placeholder {
   max-width: 790px;
   margin: 0 auto;
 }
+.install-scenario-image {
+  margin: 0 0 28px;
+}
+.install-scenario-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+}
 .cop-scop-title,
 .cop-scop-cover {
   width: min(100%, 790px);
