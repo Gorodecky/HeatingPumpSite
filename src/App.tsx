@@ -493,7 +493,7 @@ function App() {
               <p>
                 Адреса:{" "}
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Вінниця%2C%20вул.%20Бучми%2C%20126"
+                  href="https://maps.app.goo.gl/Tv4y75bWHBCK6HHHA"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
