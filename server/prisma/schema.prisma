@@ -16,6 +16,7 @@ enum LeadStatus {
 model Lead {
   id                  String     @id @default(uuid()) @db.Uuid
   createdAt           DateTime   @default(now())
+  lastContactAt       DateTime   @default(now())
   status              LeadStatus @default(NEW)
   source              String     @db.VarChar(20)
   city                String?    @db.VarChar(100)

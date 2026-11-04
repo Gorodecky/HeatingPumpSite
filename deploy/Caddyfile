@@ -1,0 +1,14 @@
+{$SITE_ADDRESS} {
+	encode zstd gzip
+	redir / /HeatingPumpSite/ 308
+
+	handle /api/* {
+		reverse_proxy api:3001
+	}
+
+	handle_path /HeatingPumpSite/* {
+		root * /srv/site
+		try_files {path} /index.html
+		file_server
+	}
+}

@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 type Lead = {
   id: string;
   createdAt: string;
+  lastContactAt: string;
   status: "NEW" | "CONTACTED" | "CLOSED";
   source: string;
   city: string | null;
@@ -137,6 +138,30 @@ export default function AdminPage() {
     }
   };
 
+  const markContacted = async (leadId: string) => {
+    setBusy(true);
+    setError("");
+    try {
+      const response = await fetch(`/api/v1/admin/leads/${leadId}/contacted`, {
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken },
+        credentials: "same-origin",
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok)
+        throw new Error(result.error || "Не вдалося оновити дату контакту.");
+      await loadLeads(csrfToken);
+    } catch (reason) {
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : "Не вдалося оновити дату контакту.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <main className="detail-page admin-page">
       <div className="container admin-content">
@@ -182,6 +207,10 @@ export default function AdminPage() {
                         {statusLabels[lead.status]}
                       </span>
                     </div>
+                    <p>
+                      Останній контакт:{" "}
+                      {new Date(lead.lastContactAt).toLocaleString("uk-UA")}
+                    </p>
                     <h2>{lead.name}</h2>
                     <p>
                       <a href={`tel:${lead.phone}`}>{lead.phone}</a>
@@ -198,6 +227,13 @@ export default function AdminPage() {
                         .join(" · ") || "Контактне звернення"}
                     </p>
                     {lead.comment && <p>{lead.comment}</p>}
+                    <button
+                      className="button button-outline"
+                      onClick={() => void markContacted(lead.id)}
+                      disabled={busy}
+                    >
+                      Зафіксувати контакт сьогодні
+                    </button>
                   </article>
                 ))}
               </div>

@@ -1169,6 +1169,18 @@ input: :placeholder,textarea::placeholder {
   margin: 30px 0 50px;
 }
 
+.detail-content > .privacy-policy-status {
+  max-width: 760px;
+  margin: 26px 0 38px;
+  padding: 16px 20px;
+  border-left: 2px solid var(--color-accent);
+  background: var(--color-tone-f7f7f4);
+}
+
+.privacy-policy-body {
+  margin-bottom: 24px;
+}
+
 .detail-placeholder {
   min-height: 190px;
   border: 1px solid var(--color-border);

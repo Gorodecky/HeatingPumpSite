@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import DetailPage from "./components/DetailPage";
+import PrivacyPolicyPage from "./components/PrivacyPolicyPage";
 import AdminPage from "./components/AdminPage";
 import FadoPage from "./components/FadoPage";
 import AuxPage from "./components/AuxPage";
@@ -19,6 +20,8 @@ import KnowledgeSection from "./sections/KnowledgeSection";
 import ProcessSection from "./sections/ProcessSection";
 import SelectionSection from "./sections/SelectionSection";
 import SolutionsSection from "./sections/SolutionsSection";
+
+const leadsEnabled = import.meta.env.VITE_LEADS_ENABLED === "true";
 
 type View =
   | { kind: "home" }
@@ -146,6 +149,17 @@ function App() {
     which: "selection" | "contact",
   ) => {
     event.preventDefault();
+    if (!leadsEnabled) {
+      const setStatus =
+        which === "selection" ? setSelectionStatus : setContactStatus;
+      const setMessage =
+        which === "selection" ? setFormMessage : setContactMessage;
+      setStatus("error");
+      setMessage(
+        "Онлайн-надсилання звернень тимчасово вимкнене. Введені дані не передаються.",
+      );
+      return;
+    }
     const setStatus =
       which === "selection" ? setSelectionStatus : setContactStatus;
     const setMessage =
@@ -404,12 +418,7 @@ function App() {
     return (
       <>
         {siteHeader}
-        <DetailPage
-          eyebrow="Документ · чернетка"
-          title="Політика конфіденційності"
-          onBack={() => navigate({ kind: "home" })}
-          text="Ця сторінка поки є заглушкою, а не завершеною політикою. До публічного запуску власник сайту має надати юридичне ім’я або назву, контактні дані, правову підставу й мету обробки, строки зберігання заявок, порядок реалізації прав користувачів, а також відомості про одержувачів даних і хостинг. Не надсилайте персональні дані, доки політику не заповнено та не опубліковано."
-        />
+        <PrivacyPolicyPage onBack={() => navigate({ kind: "home" })} />
       </>
     );
 
@@ -422,6 +431,7 @@ function App() {
         <ProcessSection />
         <SelectionSection
           form={form}
+          leadsEnabled={leadsEnabled}
           step={step}
           message={formMessage}
           status={selectionStatus}
@@ -446,6 +456,7 @@ function App() {
         />
         <ContactSection
           message={contactMessage}
+          leadsEnabled={leadsEnabled}
           consent={contactConsent}
           onConsentChange={setContactConsent}
           status={contactStatus}

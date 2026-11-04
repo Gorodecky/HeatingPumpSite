@@ -3,6 +3,7 @@ import SectionHead from "../components/SectionHead";
 
 export default function ContactSection({
   message,
+  leadsEnabled,
   consent,
   onConsentChange,
   status,
@@ -10,6 +11,7 @@ export default function ContactSection({
   onPrivacy,
 }: {
   message: string;
+  leadsEnabled: boolean;
   consent: boolean;
   onConsentChange: (value: boolean) => void;
   status: "idle" | "sending" | "success" | "error";
@@ -29,7 +31,11 @@ export default function ContactSection({
                 <span>Напишіть нам.</span>
               </>
             }
-            intro="Залиште номер телефону й короткий коментар — у робочій версії ми зв’яжемося з вами."
+            intro={
+              leadsEnabled
+                ? "Залиште номер телефону й короткий коментар — ми зв’яжемося з вами щодо звернення."
+                : "Онлайн-форма тимчасово вимкнена. Щоб зв’язатися з нами, зателефонуйте за номером нижче."
+            }
           />
           <div className="contact-place">
             <span className="orange-dot" />
@@ -90,10 +96,12 @@ export default function ContactSection({
           <button
             className="button button-dark"
             type="submit"
-            disabled={status === "sending"}
+            disabled={!leadsEnabled || status === "sending"}
           >
             {status === "sending" ? (
               "Надсилаємо…"
+            ) : !leadsEnabled ? (
+              "Надсилання вимкнене"
             ) : (
               <>
                 Надіслати запит <span>↗</span>
@@ -118,7 +126,9 @@ export default function ContactSection({
             </p>
           )}
           <p className="privacy-hint">
-            Демонстраційний режим: повідомлення не надсилається.
+            {leadsEnabled
+              ? "Дані використовуються для відповіді на звернення згідно з політикою конфіденційності."
+              : "Форма тимчасово не приймає заявки. Введені дані не передаються та не зберігаються."}
           </p>
         </form>
       </div>

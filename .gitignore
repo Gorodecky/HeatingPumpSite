@@ -4,4 +4,7 @@ dist/
 .DS_Store
 .env
 .env.*
+deploy.env
+deploy.env.*
+!deploy.env.example
 !**/.env.example

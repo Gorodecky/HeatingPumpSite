@@ -12,6 +12,7 @@ type FormKey = keyof SelectionForm;
 
 export default function SelectionSection({
   form,
+  leadsEnabled,
   step,
   message,
   status,
@@ -22,6 +23,7 @@ export default function SelectionSection({
   onPrivacy,
 }: {
   form: SelectionForm;
+  leadsEnabled: boolean;
   step: number;
   message: string;
   status: "idle" | "sending" | "success" | "error";
@@ -59,7 +61,11 @@ export default function SelectionSection({
                 <span>про свій будинок.</span>
               </>
             }
-            intro="Кілька запитань допоможуть підготуватися до розмови. Це не калькулятор потужності, вартості експлуатації чи окупності."
+            intro={
+              leadsEnabled
+                ? "Кілька запитань допоможуть підготуватися до розмови. Це не калькулятор потужності, вартості експлуатації чи окупності."
+                : "Онлайн-надсилання тимчасово вимкнене. Не вводьте персональні дані: форма їх не передає."
+            }
           />
           <div className="form-aside-note">
             <span>!</span> Для точного рішення потрібен інженерний розрахунок
@@ -175,10 +181,12 @@ export default function SelectionSection({
               <button
                 type="submit"
                 className="button button-dark"
-                disabled={status === "sending"}
+                disabled={!leadsEnabled || status === "sending"}
               >
                 {status === "sending" ? (
                   "Надсилаємо…"
+                ) : !leadsEnabled ? (
+                  "Надсилання вимкнене"
                 ) : (
                   <>
                     Надіслати запит <span>↗</span>
@@ -201,7 +209,9 @@ export default function SelectionSection({
             </p>
           )}
           <p className="privacy-hint">
-            Демонстраційний режим: дані не передаються та не зберігаються.
+            {leadsEnabled
+              ? "Дані використовуються для відповіді на звернення згідно з політикою конфіденційності."
+              : "Форма тимчасово не приймає заявки. Введені дані не передаються та не зберігаються."}
           </p>
         </form>
       </div>

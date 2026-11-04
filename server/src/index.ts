@@ -30,8 +30,10 @@ if (process.env.SESSION_SECRET!.length < 32)
   throw new Error("SESSION_SECRET must be at least 32 characters.");
 
 const isProduction = process.env.NODE_ENV === "production";
+const leadsEnabled = process.env.LEADS_ENABLED === "true";
 const port = Number(process.env.PORT || 3001);
-const policyVersion = process.env.POLICY_VERSION || "2026-10-23";
+const policyVersion = process.env.POLICY_VERSION || "1.0";
+const leadCleanupIntervalMs = 24 * 60 * 60 * 1000;
 const prisma = new PrismaClient();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const PgSessionStore = connectPgSimple(session);
@@ -199,6 +201,12 @@ app.get("/api/v1/health", async (_req, res) => {
 });
 
 app.post("/api/v1/leads", publicLimiter, async (req, res, next) => {
+  if (!leadsEnabled) {
+    res
+      .status(503)
+      .json({ error: "Онлайн-надсилання звернень тимчасово вимкнене." });
+    return;
+  }
   const parsed = leadSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({
@@ -212,6 +220,7 @@ app.post("/api/v1/leads", publicLimiter, async (req, res, next) => {
     const lead = await prisma.lead.create({
       data: {
         source: input.source,
+        lastContactAt: new Date(),
         city: input.city,
         area: input.area,
         objectType: input.object,
@@ -334,6 +343,7 @@ app.get(
         select: {
           id: true,
           createdAt: true,
+          lastContactAt: true,
           status: true,
           source: true,
           city: true,
@@ -352,6 +362,47 @@ app.get(
     }
   },
 );
+
+app.post(
+  "/api/v1/admin/leads/:id/contacted",
+  csrfProtection,
+  requireAdmin,
+  async (req, res, next) => {
+    try {
+      const id = z.string().uuid().safeParse(req.params.id);
+      if (!id.success) {
+        res.status(400).json({ error: "Некоректний ідентифікатор заявки." });
+        return;
+      }
+      const lead = await prisma.lead.update({
+        where: { id: id.data },
+        data: { lastContactAt: new Date(), status: "CONTACTED" },
+        select: { id: true, lastContactAt: true, status: true },
+      });
+      res.set("Cache-Control", "no-store").json({ lead });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+const removeExpiredLeads = async () => {
+  try {
+    const removed = await prisma.$executeRaw`
+      DELETE FROM "Lead"
+      WHERE "lastContactAt" < NOW() - INTERVAL '12 months'
+    `;
+    if (removed > 0) console.log(`Removed ${removed} expired leads.`);
+  } catch {
+    console.error("Expired lead cleanup failed.");
+  }
+};
+void removeExpiredLeads();
+const leadCleanupTimer = setInterval(
+  () => void removeExpiredLeads(),
+  leadCleanupIntervalMs,
+);
+leadCleanupTimer.unref();
 
 app.use((_req, res) => res.status(404).json({ error: "Маршрут не знайдено." }));
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
