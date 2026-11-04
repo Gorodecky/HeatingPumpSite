@@ -417,9 +417,14 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
 const server = app.listen(port, () =>
   console.log(`API listening on port ${port}`),
 );
-const shutdown = () =>
+let isShuttingDown = false;
+const shutdown = () => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  clearInterval(leadCleanupTimer);
   server.close(() => {
     void prisma.$disconnect().finally(() => pool.end());
   });
+};
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
