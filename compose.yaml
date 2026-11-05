@@ -30,6 +30,9 @@ services:
       POLICY_VERSION: ${POLICY_VERSION:?Set POLICY_VERSION in deploy.env}
       APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN in deploy.env}
       LEADS_ENABLED: ${LEADS_ENABLED:-false}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-}
+      LEAD_NOTIFICATION_EMAIL: ${LEAD_NOTIFICATION_EMAIL:-tvd05@tvd.vn.ua}
     depends_on:
       db:
         condition: service_healthy

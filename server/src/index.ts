@@ -13,6 +13,8 @@ import argon2 from "argon2";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { z } from "zod";
+import { createLeadWithNotification } from "./leadPersistence.js";
+import { processLeadNotificationBatch } from "./leadNotificationWorker.js";
 
 declare module "express-session" {
   interface SessionData {
@@ -32,7 +34,7 @@ if (process.env.SESSION_SECRET!.length < 32)
 const isProduction = process.env.NODE_ENV === "production";
 const leadsEnabled = process.env.LEADS_ENABLED === "true";
 const port = Number(process.env.PORT || 3001);
-const policyVersion = process.env.POLICY_VERSION || "1.0";
+const policyVersion = process.env.POLICY_VERSION || "1.1";
 const leadCleanupIntervalMs = 24 * 60 * 60 * 1000;
 const prisma = new PrismaClient();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -217,23 +219,17 @@ app.post("/api/v1/leads", publicLimiter, async (req, res, next) => {
   }
   try {
     const input = parsed.data;
-    const lead = await prisma.lead.create({
-      data: {
-        source: input.source,
-        lastContactAt: new Date(),
-        city: input.city,
-        area: input.area,
-        objectType: input.object,
-        heatingSystem: input.heating,
-        realizationTiming: input.timing,
-        name: input.name,
-        phone: input.phone,
-        comment: input.comment,
-        consentGiven: true,
-        consentAt: new Date(),
-        policyVersion,
-      },
-      select: { id: true, createdAt: true, status: true },
+    const lead = await createLeadWithNotification(prisma, {
+      source: input.source,
+      city: input.city,
+      area: input.area,
+      object: input.object,
+      heating: input.heating,
+      timing: input.timing,
+      name: input.name,
+      phone: input.phone,
+      comment: input.comment,
+      policyVersion,
     });
     res.status(201).json({ lead });
   } catch (error) {
@@ -397,6 +393,37 @@ const removeExpiredLeads = async () => {
     console.error("Expired lead cleanup failed.");
   }
 };
+
+const notificationConfigured = Boolean(
+  process.env.RESEND_API_KEY &&
+    process.env.RESEND_FROM_EMAIL &&
+    process.env.LEAD_NOTIFICATION_EMAIL,
+);
+if (!notificationConfigured) {
+  console.warn(
+    "Lead email notifications are not configured; saved leads remain queued.",
+  );
+}
+
+const notificationWorkerIntervalMs = 15_000;
+let notificationWorkerRunning = false;
+const processLeadNotifications = async () => {
+  if (!notificationConfigured || notificationWorkerRunning) return;
+  notificationWorkerRunning = true;
+  try {
+    await processLeadNotificationBatch(prisma);
+  } catch {
+    console.error("Lead notification queue processing failed.");
+  } finally {
+    notificationWorkerRunning = false;
+  }
+};
+void processLeadNotifications();
+const notificationWorkerTimer = setInterval(
+  () => void processLeadNotifications(),
+  notificationWorkerIntervalMs,
+);
+notificationWorkerTimer.unref();
 void removeExpiredLeads();
 const leadCleanupTimer = setInterval(
   () => void removeExpiredLeads(),
@@ -422,6 +449,7 @@ const shutdown = () => {
   if (isShuttingDown) return;
   isShuttingDown = true;
   clearInterval(leadCleanupTimer);
+  clearInterval(notificationWorkerTimer);
   server.close(() => {
     void prisma.$disconnect().finally(() => pool.end());
   });

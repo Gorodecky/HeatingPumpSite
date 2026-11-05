@@ -1113,6 +1113,21 @@ textarea::placeholder {
   color: var(--color-tone-a9afac);
 }
 
+.footer-phone-link {
+  text-decoration: none;
+}
+
+.footer-phone-link:hover i,
+.footer-phone-link:focus-visible i {
+  color: var(--color-accent);
+}
+
+.footer-phone-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 .footer-bottom {
   height: 48px;
   border-top: 1px solid var(--color-tone-4c5050);

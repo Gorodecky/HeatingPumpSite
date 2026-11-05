@@ -499,7 +499,10 @@ function App() {
               <span>ЗВ’ЯЗОК</span>
               <button onClick={() => goTo("contact")}>Залишити запит ↗</button>
               <p>
-                Телефон: <i>+38(063)878-82-81</i>
+                Телефон:{" "}
+                <a className="footer-phone-link" href="tel:+380638788281">
+                  <i>+38(063)878-82-81</i>
+                </a>
               </p>
               <p>
                 Адреса:{" "}

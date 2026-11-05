@@ -15,7 +15,7 @@
 1. Після підтвердження SSH fingerprint скопіювати проєкт на VPS і створити там `deploy.env` на основі `deploy.env.example`. Не копіювати локальний `server/.env`.
 2. Згенерувати окремі значення `DB_PASSWORD` (`openssl rand -hex 32`) та `SESSION_SECRET` (`openssl rand -hex 48`). Hex-значення безпечні для URI в `DATABASE_URL`. Встановити права `600` на `deploy.env`.
 3. Підставити фактичний домен у `APP_ORIGIN` і `SITE_ADDRESS`. DNS цього кроку не змінює: перед запуском власник має окремо налаштувати домен і перевірити, що він веде на VPS. `LEADS_ENABLED` лишати `false`.
-4. Політика версії `1.0` і дата чинності наведені в `docs/PRIVACY_POLICY.md`. `LEADS_ENABLED=true` одночасно задає frontend build flag та вмикає приймання API; за замовчуванням обидва вимкнені. Увімкнення заявок потребує окремого рішення власника після production-перевірок.
+4. Політика версії `1.1` і дата чинності наведені в `docs/PRIVACY_POLICY.md`. Налаштування Resend описано в `docs/RESEND_NOTIFICATIONS.md`. `LEADS_ENABLED=true` одночасно задає frontend build flag та вмикає приймання API; за замовчуванням обидва вимкнені. Увімкнення заявок потребує окремого рішення власника після production-перевірок.
 5. Перший запуск із порожньою БД: `docker compose --env-file deploy.env up -d --build db`, потім `docker compose --env-file deploy.env run --rm migrate`, після успішної міграції — `docker compose --env-file deploy.env up -d --build api web backup`. Перед міграцією будь-якої наявної БД перевірити її стан і зробити backup.
 6. Перевірити `https://<домен>/api/v1/health`, головну сторінку та `/admin`.
 
