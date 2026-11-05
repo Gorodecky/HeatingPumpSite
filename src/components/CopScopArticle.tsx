@@ -214,7 +214,7 @@ export default function CopScopArticle({ onBack }: Props) {
       <footer className="footer">
         <div className="container footer-bottom">
           <span>
-            © {new Date().getFullYear()} Тепло поруч · Вінниця та область
+            © {new Date().getFullYear()} П’ятий елемент · Вінниця та область
           </span>
           <button onClick={onBack}>← До бази знань</button>
         </div>

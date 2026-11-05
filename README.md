@@ -1,4 +1,4 @@
-# Тепло поруч
+# П’ятий елемент
 
 Фронтенд React/Vite знаходиться в корені репозиторію. API та схема PostgreSQL розташовані окремо в `server/`.
 
@@ -14,6 +14,10 @@
 6. В іншому терміналі запустіть фронтенд: `npm run dev`. Vite проксуватиме `/api` до `http://localhost:3001`.
 7. Створіть адміністратора командою `npm run admin:create`. Команда інтерактивно запитує логін і пароль (пароль не відображається) та зберігає лише хеш Argon2id.
 8. Відкрийте `/admin` на локальному сайті для входу й перегляду останніх 100 заявок.
+
+## SEO-збірка
+
+Production-збірка для кореневого домену використовує `VITE_BASE_PATH=/`. GitHub Pages задає `VITE_BASE_PATH=/HeatingPumpSite/` у workflow. Команда `npm run build` генерує prerender HTML для адрес із `src/seo.ts`, а також `dist/robots.txt` і `dist/sitemap.xml`. Перевірка зібраних SEO-сторінок: `npm run test:seo`.
 
 Серверний `npm run db:migrate` виконує `prisma migrate deploy`; для локальної розробки, коли потрібне створення нової міграції, доступна команда `npm --prefix server run db:migrate:dev`.
 

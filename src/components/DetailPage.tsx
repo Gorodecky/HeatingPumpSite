@@ -28,7 +28,7 @@ export default function DetailPage({
       <footer className="footer">
         <div className="container footer-bottom">
           <span>
-            © {new Date().getFullYear()} Тепло поруч · Назва тимчасова
+            © {new Date().getFullYear()} П’ятий елемент · Вінниця та область
           </span>
           <button onClick={onBack}>← Повернутися</button>
         </div>

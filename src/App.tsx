@@ -12,6 +12,7 @@ import LgThermaVPage from "./components/LgThermaVPage";
 import ViessmannPage from "./components/ViessmannPage";
 import InstallationCostsArticle from "./components/InstallationCostsArticle";
 import SiteHeader from "./components/SiteHeader";
+import { seoForView, seoPathForView } from "./seo";
 import { articles, brands, type SelectionForm } from "./data/siteContent";
 import BrandsSection from "./sections/BrandsSection";
 import ContactSection from "./sections/ContactSection";
@@ -30,12 +31,19 @@ type View =
   | { kind: "privacy" }
   | { kind: "admin" };
 
-function viewFromPath(): View {
+function viewFromPath(pathname: string): View {
   const basePath = import.meta.env.BASE_URL;
-  const pathname = window.location.pathname.startsWith(basePath)
-    ? `/${window.location.pathname.slice(basePath.length)}`
-    : window.location.pathname;
-  const parts = decodeURIComponent(pathname).split("/").filter(Boolean);
+  const appPath =
+    basePath !== "/" && pathname.startsWith(basePath)
+      ? `/${pathname.slice(basePath.length)}`
+      : pathname;
+  let decodedPath = appPath;
+  try {
+    decodedPath = decodeURIComponent(appPath);
+  } catch {
+    // Unknown malformed paths fall through to the generic page state.
+  }
+  const parts = decodedPath.split("/").filter(Boolean);
   if (parts[0] === "admin") return { kind: "admin" };
   if (parts[0] === "privacy") return { kind: "privacy" };
   if (parts[0] === "brands") {
@@ -60,16 +68,28 @@ function viewFromPath(): View {
       };
     if (slug === "radiatory-chy-tepla-pidloha")
       return { kind: "article", title: "Радіатори чи тепла підлога?" };
+    if (
+      slug === "vytraty-ta-etapy-montazhu" ||
+      slug === "витрати-та-етапи-монтажу"
+    )
+      return { kind: "article", title: "Витрати та етапи монтажу" };
     const found = articles.find(
       ([title]) => title.toLowerCase().replace(/\s+/g, "-") === slug,
     );
     return { kind: "article", title: found?.[0] || slug.replace(/-/g, " ") };
   }
+  if (parts.length > 0)
+    return {
+      kind: "article",
+      title: parts[parts.length - 1].replace(/-/g, " "),
+    };
   return { kind: "home" };
 }
 
-function App() {
-  const [view, setView] = useState<View>(viewFromPath);
+function App({ initialPath }: { initialPath?: string }) {
+  const [view, setView] = useState<View>(() =>
+    viewFromPath(initialPath ?? window.location.pathname),
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<SelectionForm>({
@@ -94,35 +114,52 @@ function App() {
 
   useEffect(() => {
     const back = () => {
-      setView(viewFromPath());
+      setView(viewFromPath(window.location.pathname));
       window.scrollTo(0, 0);
     };
     window.addEventListener("popstate", back);
     return () => window.removeEventListener("popstate", back);
   }, []);
 
+  useEffect(() => {
+    const seo = seoForView(view);
+    document.title = seo.title;
+    const setMeta = (
+      attribute: "name" | "property",
+      key: string,
+      content: string,
+    ) => {
+      let element = document.head.querySelector<HTMLMetaElement>(
+        `meta[${attribute}="${key}"]`,
+      );
+      if (!element) {
+        element = document.createElement("meta");
+        element.setAttribute(attribute, key);
+        document.head.appendChild(element);
+      }
+      element.content = content;
+    };
+    const canonicalUrl = `https://teplo-tvd.live${seo.path}`;
+    setMeta("name", "description", seo.description);
+    setMeta("name", "robots", seo.indexable ? "index,follow" : "noindex,nofollow");
+    setMeta("property", "og:title", seo.title);
+    setMeta("property", "og:description", seo.description);
+    setMeta("property", "og:url", canonicalUrl);
+    let canonical = document.head.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]',
+    );
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
+  }, [view]);
+
   const navigate = (next: View) => {
     setView(next);
     setMenuOpen(false);
-    const path =
-      next.kind === "home"
-        ? "/"
-        : next.kind === "privacy"
-          ? "/privacy"
-          : next.kind === "admin"
-            ? "/admin"
-            : next.kind === "article" && next.title === "Теплові насоси FADO"
-              ? "/knowledge/teplovi-nasosy-fado/"
-              : next.kind === "article" &&
-                  next.title === "Чи підійде вам тепловий насос?"
-                ? "/knowledge/chi-pidiide-vam-teplovyi-nasos/"
-                : next.kind === "article" &&
-                    next.title.startsWith("COP і SCOP:")
-                  ? "/knowledge/cop-i-scop/"
-                  : next.kind === "article" &&
-                      next.title === "Радіатори чи тепла підлога?"
-                    ? "/knowledge/radiatory-chy-tepla-pidloha/"
-                    : `/${next.kind === "brand" ? "brands" : "knowledge"}/${encodeURIComponent(next.title.toLowerCase().replace(/\s+/g, "-"))}`;
+    const path = seoPathForView(next);
     const basePath = import.meta.env.BASE_URL;
     window.history.pushState({}, "", `${basePath}${path.replace(/^\//, "")}`);
     window.scrollTo({ top: 0, behavior: "smooth" });

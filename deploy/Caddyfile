@@ -1,3 +1,7 @@
+www.teplo-tvd.live {
+	redir https://teplo-tvd.live{uri} 308
+}
+
 {$SITE_ADDRESS} {
 	encode zstd gzip
 	@legacyRoot path /HeatingPumpSite /HeatingPumpSite/
@@ -11,7 +15,7 @@
 
 	handle {
 		root * /srv/site
-		try_files {path} {path}/ /index.html
+		try_files {path} {path}/
 		file_server
 	}
 }

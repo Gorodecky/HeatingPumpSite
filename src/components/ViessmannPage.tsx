@@ -347,7 +347,7 @@ export default function ViessmannPage({
       <footer className="footer">
         <div className="container footer-bottom">
           <span>
-            © {new Date().getFullYear()} Тепло поруч · Вінниця та область
+            © {new Date().getFullYear()} П’ятий елемент · Вінниця та область
           </span>
           <button onClick={onBack}>← Усі виробники</button>
         </div>
