@@ -37,6 +37,8 @@ test("every indexed route has unique metadata and canonical HTML", async () => {
     assert.equal((html.match(/<meta name="description"/g) || []).length, 1);
     assert.equal((html.match(/<meta name="robots"/g) || []).length, 1);
     assert.equal((html.match(/<link rel="canonical"/g) || []).length, 1);
+    assert.equal((html.match(/<meta property="og:site_name"/g) || []).length, 1);
+    assert.match(html, /<meta property="og:site_name" content="Тепло поруч"\s*\/?\s*>/);
     assert.match(html, /<meta name="description" content="[^"]+"\s*\/?\s*>/);
     assert.match(html, /<meta name="robots" content="index,follow"\s*\/?\s*>/);
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}" />`));

@@ -144,6 +144,7 @@ function App({ initialPath }: { initialPath?: string }) {
     setMeta("name", "robots", seo.indexable ? "index,follow" : "noindex,nofollow");
     setMeta("property", "og:title", seo.title);
     setMeta("property", "og:description", seo.description);
+    setMeta("property", "og:site_name", "Тепло поруч");
     setMeta("property", "og:url", canonicalUrl);
     let canonical = document.head.querySelector<HTMLLinkElement>(
       'link[rel="canonical"]',

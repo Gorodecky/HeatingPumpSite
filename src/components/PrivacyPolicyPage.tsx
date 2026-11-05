@@ -115,7 +115,7 @@ export default function PrivacyPolicyPage({
       </div>
       <footer className="footer">
         <div className="container footer-bottom">
-          <span>© {new Date().getFullYear()} П’ятий елемент · Вінниця</span>
+          <span>© {new Date().getFullYear()} Тепло поруч · Вінниця</span>
           <button onClick={onBack}>← Повернутися</button>
         </div>
       </footer>

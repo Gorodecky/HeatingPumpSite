@@ -22,7 +22,7 @@ export default function SiteHeader({
           <button
             className="wordmark"
             onClick={() => onNavigate("home")}
-            aria-label="П’ятий елемент — на головну"
+            aria-label="Тепло поруч — на головну"
           >
             <img
               className="wordmark-logo"

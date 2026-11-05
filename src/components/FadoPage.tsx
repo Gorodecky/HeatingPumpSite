@@ -108,7 +108,7 @@ export default function FadoPage({
       <footer className="footer">
         <div className="container footer-bottom">
           <span>
-            © {new Date().getFullYear()} П’ятий елемент · Вінниця та область
+            © {new Date().getFullYear()} Тепло поруч · Вінниця та область
           </span>
           <button onClick={onBack}>← Усі виробники</button>
         </div>

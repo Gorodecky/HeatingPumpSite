@@ -37,12 +37,13 @@ try {
       `<meta property="og:title" content="${escapeHtml(page.title)}" />`,
       `<meta property="og:description" content="${escapeHtml(page.description)}" />`,
       `<meta property="og:type" content="website" />`,
+      `<meta property="og:site_name" content="Тепло поруч" />`,
       `<meta property="og:url" content="${canonical}" />`,
       `<link rel="canonical" href="${canonical}" />`,
     ].join("\n    ");
     const html = template
       .replace(/<title>[\s\S]*?<\/title>/, "")
-      .replace(/\s*<meta\s+(?:name|property)="(?:description|robots|og:title|og:description|og:type|og:url)"[^>]*\/?\s*>/g, "")
+      .replace(/\s*<meta\s+(?:name|property)="(?:description|robots|og:title|og:description|og:type|og:site_name|og:url)"[^>]*\/?\s*>/g, "")
       .replace(/\s*<link\s+rel="canonical"[^>]*\/?\s*>/g, "")
       .replace("</head>", `    ${pageHead}\n  </head>`)
       .replace('<div id="root"></div>', `<div id="root">${markup}</div>`);

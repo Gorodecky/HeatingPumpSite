@@ -13,16 +13,16 @@ export const seoPages: SeoPage[] = [
   {
     path: "/",
     kind: "home",
-    title: "Теплові насоси у Вінниці та області — П’ятий елемент",
+    title: "Теплові насоси у Вінниці та області — Тепло поруч",
     description:
-      "Підбір теплового насоса для приватного будинку у Вінниці та області. Оцінка умов об’єкта й наступних кроків від команди «П’ятий елемент».",
+      "Підбір теплового насоса для приватного будинку у Вінниці та області. Оцінка умов об’єкта й наступних кроків від команди «Тепло поруч».",
     indexable: true,
   },
   {
     path: "/brands/viessmann/",
     kind: "brand",
     viewTitle: "Viessmann",
-    title: "Теплові насоси Viessmann Vitocal — П’ятий елемент",
+    title: "Теплові насоси Viessmann Vitocal — Тепло поруч",
     description:
       "Огляд теплових насосів Viessmann Vitocal, їхніх серій і застосування для будинків у Вінниці та області.",
     indexable: true,
@@ -31,7 +31,7 @@ export const seoPages: SeoPage[] = [
     path: "/brands/lg/",
     kind: "brand",
     viewTitle: "LG",
-    title: "Теплові насоси LG Therma V — П’ятий елемент",
+    title: "Теплові насоси LG Therma V — Тепло поруч",
     description:
       "Огляд систем LG Therma V для опалення та гарячого водопостачання приватного будинку.",
     indexable: true,
@@ -40,7 +40,7 @@ export const seoPages: SeoPage[] = [
     path: "/brands/aux/",
     kind: "brand",
     viewTitle: "AUX",
-    title: "Теплові насоси AUX — П’ятий елемент",
+    title: "Теплові насоси AUX — Тепло поруч",
     description:
       "Огляд теплових насосів AUX, лінійок обладнання та основних параметрів для підбору.",
     indexable: true,
@@ -49,7 +49,7 @@ export const seoPages: SeoPage[] = [
     path: "/brands/fado/",
     kind: "brand",
     viewTitle: "FADO",
-    title: "Теплові насоси FADO — П’ятий елемент",
+    title: "Теплові насоси FADO — Тепло поруч",
     description:
       "Інформація про теплові насоси FADO, їхні моделі, роботу системи та підбір для будинку.",
     indexable: true,
@@ -58,7 +58,7 @@ export const seoPages: SeoPage[] = [
     path: "/knowledge/chi-pidiide-vam-teplovyi-nasos/",
     kind: "article",
     viewTitle: "Чи підійде вам тепловий насос?",
-    title: "Чи підійде тепловий насос для вашого будинку? — П’ятий елемент",
+    title: "Чи підійде тепловий насос для вашого будинку? — Тепло поруч",
     description:
       "Дізнайтеся, які особливості будинку, опалення та гарячої води врахувати перед вибором теплового насоса.",
     indexable: true,
@@ -67,7 +67,7 @@ export const seoPages: SeoPage[] = [
     path: "/knowledge/cop-i-scop/",
     kind: "article",
     viewTitle: "COP і SCOP: як читати показники ефективності теплового насоса",
-    title: "COP і SCOP теплового насоса: як читати показники — П’ятий елемент",
+    title: "COP і SCOP теплового насоса: як читати показники — Тепло поруч",
     description:
       "Пояснюємо різницю між COP і SCOP, умови вимірювання та коректне порівняння ефективності теплових насосів.",
     indexable: true,
@@ -76,7 +76,7 @@ export const seoPages: SeoPage[] = [
     path: "/knowledge/radiatory-chy-tepla-pidloha/",
     kind: "article",
     viewTitle: "Радіатори чи тепла підлога?",
-    title: "Радіатори чи тепла підлога для теплового насоса? — П’ятий елемент",
+    title: "Радіатори чи тепла підлога для теплового насоса? — Тепло поруч",
     description:
       "Порівняння радіаторів і теплої підлоги для теплового насоса: температура подачі, ефективність та реконструкція.",
     indexable: true,
@@ -85,7 +85,7 @@ export const seoPages: SeoPage[] = [
     path: "/knowledge/vytraty-ta-etapy-montazhu/",
     kind: "article",
     viewTitle: "Витрати та етапи монтажу",
-    title: "Витрати та етапи монтажу теплового насоса — П’ятий елемент",
+    title: "Витрати та етапи монтажу теплового насоса — Тепло поруч",
     description:
       "Що впливає на бюджет встановлення теплового насоса та які етапи проходить монтаж системи в будинку.",
     indexable: true,
@@ -94,7 +94,7 @@ export const seoPages: SeoPage[] = [
     path: "/knowledge/teplovi-nasosy-fado/",
     kind: "article",
     viewTitle: "Теплові насоси FADO",
-    title: "Теплові насоси FADO: моделі та підбір — П’ятий елемент",
+    title: "Теплові насоси FADO: моделі та підбір — Тепло поруч",
     description:
       "Огляд теплових насосів FADO: принцип роботи, опалення, гаряча вода, керування та добір обладнання.",
     indexable: true,
@@ -102,14 +102,14 @@ export const seoPages: SeoPage[] = [
   {
     path: "/privacy/",
     kind: "privacy",
-    title: "Політика конфіденційності — П’ятий елемент",
+    title: "Політика конфіденційності — Тепло поруч",
     description: "Політика конфіденційності сайту teplo-tvd.live.",
     indexable: true,
   },
   {
     path: "/admin/",
     kind: "admin",
-    title: "Адміністрування — П’ятий елемент",
+    title: "Адміністрування — Тепло поруч",
     description: "Сторінка адміністрування сайту.",
     indexable: false,
   },
@@ -144,7 +144,7 @@ export function seoForPath(path: string): SeoPage {
   return {
     path: normalized,
     kind: "article",
-    title: "Сторінку не знайдено — П’ятий елемент",
+    title: "Сторінку не знайдено — Тепло поруч",
     description: "Запитану сторінку не знайдено.",
     indexable: false,
   };
@@ -169,8 +169,8 @@ export function seoForView(view: { kind: PageKind; title?: string }): SeoPage {
   return {
     path,
     kind: view.kind,
-    title: `${view.title || "Сторінку не знайдено"} — П’ятий елемент`,
-    description: "Сторінка сайту «П’ятий елемент» у Вінниці та області.",
+    title: `${view.title || "Сторінку не знайдено"} — Тепло поруч`,
+    description: "Сторінка сайту «Тепло поруч» у Вінниці та області.",
     indexable: false,
   };
 }
