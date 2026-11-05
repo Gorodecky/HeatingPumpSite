@@ -49,6 +49,9 @@ model LeadNotification {
   lead             Lead                    @relation(fields: [leadId], references: [id], onDelete: Cascade)
   status           LeadNotificationStatus  @default(PENDING)
   attempts         Int                     @default(0)
+  firstAttemptAt   DateTime?
+  manualRetryCount Int                     @default(0)
+  lastManualRetryAt DateTime?
   nextAttemptAt    DateTime                @default(now())
   lockedAt         DateTime?
   sentAt           DateTime?

@@ -13,7 +13,8 @@ import argon2 from "argon2";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import { z } from "zod";
-import { sendWithResend, type NotificationLead } from "./leadNotifications.js";
+import { createLeadWithNotification } from "./leadPersistence.js";
+import { processLeadNotificationBatch } from "./leadNotificationWorker.js";
 
 declare module "express-session" {
   interface SessionData {
@@ -218,29 +219,17 @@ app.post("/api/v1/leads", publicLimiter, async (req, res, next) => {
   }
   try {
     const input = parsed.data;
-    const lead = await prisma.$transaction(async (transaction) => {
-      const savedLead = await transaction.lead.create({
-        data: {
-          source: input.source,
-          lastContactAt: new Date(),
-          city: input.city,
-          area: input.area,
-          objectType: input.object,
-          heatingSystem: input.heating,
-          realizationTiming: input.timing,
-          name: input.name,
-          phone: input.phone,
-          comment: input.comment,
-          consentGiven: true,
-          consentAt: new Date(),
-          policyVersion,
-        },
-        select: { id: true, createdAt: true, status: true },
-      });
-      await transaction.leadNotification.create({
-        data: { leadId: savedLead.id },
-      });
-      return savedLead;
+    const lead = await createLeadWithNotification(prisma, {
+      source: input.source,
+      city: input.city,
+      area: input.area,
+      object: input.object,
+      heating: input.heating,
+      timing: input.timing,
+      name: input.name,
+      phone: input.phone,
+      comment: input.comment,
+      policyVersion,
     });
     res.status(201).json({ lead });
   } catch (error) {
@@ -416,97 +405,13 @@ if (!notificationConfigured) {
   );
 }
 
-const retryDelaysMs = [
-  60_000,
-  5 * 60_000,
-  15 * 60_000,
-  60 * 60_000,
-  3 * 60 * 60_000,
-  6 * 60 * 60_000,
-];
 const notificationWorkerIntervalMs = 15_000;
 let notificationWorkerRunning = false;
 const processLeadNotifications = async () => {
   if (!notificationConfigured || notificationWorkerRunning) return;
   notificationWorkerRunning = true;
   try {
-    for (let processed = 0; processed < 5; processed += 1) {
-      const claimed = await prisma.$transaction((transaction) =>
-        transaction.$queryRaw<Array<{ leadId: string; attempts: number }>>`
-          WITH candidate AS (
-            SELECT "id" FROM "LeadNotification"
-            WHERE ("status" = 'PENDING' AND "nextAttemptAt" <= NOW())
-               OR ("status" = 'PROCESSING' AND "lockedAt" < NOW() - INTERVAL '5 minutes')
-            ORDER BY "nextAttemptAt", "createdAt"
-            FOR UPDATE SKIP LOCKED
-            LIMIT 1
-          )
-          UPDATE "LeadNotification" AS notification
-          SET "status" = 'PROCESSING', "lockedAt" = NOW(), "attempts" = "attempts" + 1,
-              "updatedAt" = NOW()
-          FROM candidate
-          WHERE notification."id" = candidate."id"
-          RETURNING notification."leadId", notification."attempts"
-        `,
-      );
-      const notification = claimed[0];
-      if (!notification) break;
-      try {
-        const lead = await prisma.lead.findUnique({
-          where: { id: notification.leadId },
-          select: {
-            id: true,
-            createdAt: true,
-            source: true,
-            name: true,
-            phone: true,
-            city: true,
-            area: true,
-            objectType: true,
-            heatingSystem: true,
-            realizationTiming: true,
-            comment: true,
-          },
-        });
-        if (!lead) throw new Error("LEAD_NOT_FOUND");
-        await sendWithResend(lead as NotificationLead);
-        await prisma.leadNotification.update({
-          where: { leadId: notification.leadId },
-          data: {
-            status: "SENT",
-            sentAt: new Date(),
-            lockedAt: null,
-            lastErrorCode: null,
-          },
-        });
-      } catch (error) {
-        const errorCode =
-          error instanceof Error && /^[A-Z0-9_]{1,100}$/.test(error.message)
-            ? error.message
-            : "DELIVERY_ERROR";
-        const attempts = notification.attempts;
-        const created = await prisma.leadNotification.findUnique({
-          where: { leadId: notification.leadId },
-          select: { createdAt: true },
-        });
-        const exhausted =
-          attempts >= 8 ||
-          !created ||
-          Date.now() - created.createdAt.getTime() >= 20 * 60 * 60 * 1000;
-        const delay =
-          retryDelaysMs[Math.min(attempts - 1, retryDelaysMs.length - 1)];
-        await prisma.leadNotification.update({
-          where: { leadId: notification.leadId },
-          data: {
-            status: exhausted ? "FAILED" : "PENDING",
-            lockedAt: null,
-            nextAttemptAt: new Date(Date.now() + delay),
-            lastErrorCode: errorCode,
-          },
-        });
-        console.error(`Lead notification delivery failed (${errorCode}).`);
-      }
-    }
+    await processLeadNotificationBatch(prisma);
   } catch {
     console.error("Lead notification queue processing failed.");
   } finally {
