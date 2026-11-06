@@ -5,6 +5,7 @@ RUN npm ci
 COPY index.html vite.config.ts tsconfig*.json ./
 COPY src ./src
 COPY public ./public
+COPY scripts/prerender.mjs ./scripts/prerender.mjs
 ARG VITE_LEADS_ENABLED=false
 ARG VITE_BASE_PATH=/
 ENV VITE_LEADS_ENABLED=$VITE_LEADS_ENABLED

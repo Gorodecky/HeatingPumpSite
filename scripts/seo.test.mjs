@@ -94,7 +94,12 @@ test("every indexed route has unique metadata and canonical HTML", async () => {
 });
 
 test("prerendered route markup matches the initial React server render", async () => {
+  const homepage = await readRoute("/");
+  const assetPath = homepage.match(/src="([^\"]*\/assets\/index-[^\"]+\.js)"/)?.[1];
+  assert.ok(assetPath, "homepage script asset was not found");
+  const assetBase = assetPath.slice(0, assetPath.lastIndexOf("assets/"));
   const vite = await createServer({
+    base: assetBase,
     appType: "custom",
     logLevel: "error",
     server: { middlewareMode: true, hmr: false, ws: false },
