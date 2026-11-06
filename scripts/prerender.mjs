@@ -20,9 +20,14 @@ const escapeHtml = (value) =>
     .replaceAll("'", "&#39;");
 
 try {
-  const [{ default: App }, { seoPages, seoAliases, indexedSeoPages }] = await Promise.all([
+  const [
+    { default: App },
+    { seoPages, seoAliases, indexedSeoPages },
+    { structuredDataForPath, serializeStructuredData, JSON_LD_SCRIPT_ID },
+  ] = await Promise.all([
     server.ssrLoadModule("/src/App.tsx"),
     server.ssrLoadModule("/src/seo.ts"),
+    server.ssrLoadModule("/src/structuredData.ts"),
   ]);
   const template = await readFile(path.join(outputDirectory, "index.html"), "utf8");
 
@@ -30,6 +35,7 @@ try {
     const markup = renderToString(createElement(App, { initialPath: page.path }));
     const canonical = `https://teplo-tvd.live${page.path}`;
     const robots = page.indexable ? "index,follow" : "noindex,nofollow";
+    const structuredData = structuredDataForPath(page.path);
     const pageHead = [
       `<title>${escapeHtml(page.title)}</title>`,
       `<meta name="description" content="${escapeHtml(page.description)}" />`,
@@ -40,6 +46,11 @@ try {
       `<meta property="og:site_name" content="Тепло поруч" />`,
       `<meta property="og:url" content="${canonical}" />`,
       `<link rel="canonical" href="${canonical}" />`,
+      ...(structuredData
+        ? [
+            `<script id="${JSON_LD_SCRIPT_ID}" type="application/ld+json">${serializeStructuredData(structuredData)}</script>`,
+          ]
+        : []),
     ].join("\n    ");
     const html = template
       .replace(/<title>[\s\S]*?<\/title>/, "")

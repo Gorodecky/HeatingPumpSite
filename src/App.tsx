@@ -13,6 +13,7 @@ import ViessmannPage from "./components/ViessmannPage";
 import InstallationCostsArticle from "./components/InstallationCostsArticle";
 import SiteHeader from "./components/SiteHeader";
 import { seoForView, seoPathForView } from "./seo";
+import { syncStructuredData } from "./structuredData";
 import { articles, brands, type SelectionForm } from "./data/siteContent";
 import BrandsSection from "./sections/BrandsSection";
 import ContactSection from "./sections/ContactSection";
@@ -158,6 +159,7 @@ function App({ initialPath }: { initialPath?: string }) {
       document.head.appendChild(canonical);
     }
     canonical.href = canonicalUrl;
+    syncStructuredData(document, seo.path);
   }, [view]);
 
   const navigate = (next: View) => {
