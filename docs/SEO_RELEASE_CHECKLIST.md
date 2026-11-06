@@ -3,7 +3,7 @@
 - **Дата перевірки:** 6 листопада 2026 року
 - **Гілка:** `feature/seo-optimization`
 - **Production:** `https://teplo-tvd.live`
-- **Статус:** локальні перевірки пройшли; merge, push і deployment не виконувалися.
+- **Статус:** локальні перевірки пройшли; гілку `feature/seo-optimization` відправлено до GitHub, PR #2 відкрито; merge та deployment не виконувалися.
 
 ## Git і межі змін
 
@@ -12,7 +12,7 @@
 - API runtime image виконує `npm ci --omit=dev --omit=optional`, копіює лише generated `.prisma` client та `dist`; Docker build завершується помилкою, якщо `prisma`, `@prisma/config` чи `deepmerge-ts` залишилися у runtime dependencies. Migration image як і раніше збирається з `build` target.
 - Навмисні deployment/build зміни: `.github/workflows/deploy.yml` задає Pages base `/HeatingPumpSite/`; `Dockerfile` та `compose.yaml` передають base `/` для Hetzner; `deploy/Caddyfile` перенаправляє www і старі `/HeatingPumpSite/` URL та обслуговує кореневу збірку. API reverse proxy залишається `/api/*` → `api:3001`.
 - `Dockerfile` додатково копіює `scripts/prerender.mjs` у build stage. Без цього Hetzner web image не збирався після додавання prerender до `npm run build`.
-- `LEADS_ENABLED` у deploy прикладі лишається вимкненим. Production-конфігурацію на сервері не читали й не змінювали.
+- `LEADS_ENABLED=false` у `deploy.env.example` — лише безпечне значення для прикладу. Під час deployment зберегти фактичне production-значення `LEADS_ENABLED`: приймання заявок на Hetzner раніше успішно працювало. Не копіювати приклад поверх production `deploy.env` і не перемикати цей прапорець у межах SEO-релізу. Production-конфігурацію на сервері не читали й не змінювали.
 - Робоче дерево має бути чистим перед PR/merge; перед публікацією перевірити `git status --short --branch` та `git diff --check origin/main...HEAD`.
 
 ## Security dependency changes — 6 листопада 2026 року
@@ -54,7 +54,7 @@
 
 Виконувати лише після окремого погодження merge і deployment. GitHub Actions автоматично публікує GitHub Pages після push у `main`, тому merge до `main` є дією, що запускає публікацію Pages.
 
-1. На review підтвердити commits і diff. Переконатися, що production `deploy.env` не змінений, `SITE_ADDRESS=teplo-tvd.live`, `APP_ORIGIN=https://teplo-tvd.live`, а `LEADS_ENABLED` лишається у погодженому стані (за поточним планом — `false`). Не копіювати локальні `.env` на VPS.
+1. На review підтвердити commits і diff. Переконатися, що production `deploy.env` не змінений, `SITE_ADDRESS=teplo-tvd.live`, `APP_ORIGIN=https://teplo-tvd.live`, а фактичне production-значення `LEADS_ENABLED` збережене без змін. Не копіювати `deploy.env.example` чи локальні `.env` на VPS.
 2. На VPS перевірити поточні сервіси й вільне місце, зберегти попередні web та api images під окремими tags, а також створити й перевірити свіжу резервну копію PostgreSQL. Перед зміною перевірити, що архів не порожній і проходить `gzip -t`.
 3. Оновити checkout до погодженого commit із `main`, перевірити `git status`, не змінювати `deploy.env`.
 4. Гілка змінює API image та валідацію HTTP, але не Prisma schema чи migrations. Для цього релізу DB migration не потрібна. Після перевірки backup зібрати й оновити web та api:
@@ -100,7 +100,7 @@ curl -fsS https://teplo-tvd.live/ -o /dev/null
 - Для `deepmerge-ts` використовується major override 8.0.1, перевірений із Prisma CLI 6.19.3 та реальною `migrate deploy` на тестовій БД; при зміні Prisma CLI треба повторити цей test.
 - Реальна поведінка DNS, TLS, redirects, Caddy routes та production API не підтверджена; локальні перевірки не доводять runtime production.
 - Merge у `main` запускає GitHub Pages deployment автоматично.
-- На Hetzner Caddy отримує config із кореневим доменом та www redirect; до deployment підтвердити DNS для обох hostnames і зберегти Caddy volumes. Не змінювати DB/lead flags у межах SEO-релізу.
+- На Hetzner Caddy отримує config із кореневим доменом та www redirect; до deployment підтвердити DNS для обох hostnames і зберегти Caddy volumes. Не змінювати БД або фактичний production `LEADS_ENABLED` у межах SEO-релізу.
 - Ресурси 1 GB VPS мають невеликий запас відповідно до `docs/DEPLOY_CP02.md`; після build/restart контролювати пам’ять, диск та health.
 
 ## Рішення перед публікацією
