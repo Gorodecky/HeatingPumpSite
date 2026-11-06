@@ -88,18 +88,23 @@ const text = (max: number) =>
     .trim()
     .transform((value) => value.replace(/\s+/g, " "))
     .pipe(z.string().min(1).max(max));
-const optionalComment = z
-  .string()
-  .optional()
-  .transform((value) => value?.trim().replace(/\s+/g, " ") || undefined)
-  .pipe(z.string().max(2000).optional());
+const optionalComment = z.preprocess(
+  (value) =>
+    typeof value === "string"
+      ? value.trim().replace(/\s+/g, " ") || undefined
+      : value,
+  z.string().max(2000).optional(),
+);
 const leadSchema = z
   .object({
     source: z.enum(["selection", "contact"]),
-    city: z
-      .union([z.string(), z.undefined()])
-      .transform((value) => value?.trim().replace(/\s+/g, " ") || undefined)
-      .pipe(z.string().min(1).max(100).optional()),
+    city: z.preprocess(
+      (value) =>
+        typeof value === "string"
+          ? value.trim().replace(/\s+/g, " ") || undefined
+          : value,
+      z.string().min(1).max(100).optional(),
+    ),
     area: z
       .enum([
         "До 100 м²",
@@ -434,7 +439,15 @@ leadCleanupTimer.unref();
 app.use((_req, res) => res.status(404).json({ error: "Маршрут не знайдено." }));
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error("API request failed");
-  if (error instanceof SyntaxError) {
+  const errorType =
+    typeof error === "object" && error !== null && "type" in error
+      ? error.type
+      : undefined;
+  if (errorType === "entity.too.large") {
+    res.status(413).json({ error: "Запит перевищує дозволений розмір." });
+    return;
+  }
+  if (errorType === "entity.parse.failed" || error instanceof SyntaxError) {
     res.status(400).json({ error: "Некоректний JSON." });
     return;
   }
