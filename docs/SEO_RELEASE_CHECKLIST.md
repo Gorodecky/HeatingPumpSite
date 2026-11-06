@@ -14,6 +14,15 @@
 - `LEADS_ENABLED` у deploy прикладі лишається вимкненим. Production-конфігурацію на сервері не читали й не змінювали.
 - Робоче дерево має бути чистим перед PR/merge; перед публікацією перевірити `git status --short --branch` та `git diff --check origin/main...HEAD`.
 
+## Аудит npm-залежностей — 6 листопада 2026 року
+
+- Перевірено окремо frontend (`package.json`, `package-lock.json`) і server (`server/package.json`, `server/package-lock.json`). Lock-файли містять зафіксовані версії прямих залежностей; аудит advisories для всього дерева залежностей потребує доступу до npm registry.
+- Запущено `npm audit --json` і `npm --prefix server audit --json`. Обидві команди завершилися помилкою мережі `getaddrinfo ENOTFOUND registry.npmjs.org` під час запиту до `/-/npm/v1/security/advisories/bulk`.
+- Через цю помилку цього разу **не отримано advisory-результатів**. Для жодного пакета не можна достовірно вказати вразливу версію, severity, CVE/GHSA, production reachability/exploitability або мінімальну виправлену версію. Відсутність результату не означає відсутність вразливостей.
+- Попередній Docker `npm ci` виводив агреговане попередження: frontend — 2 advisories (1 moderate, 1 high), server — 4 high. Це історичні лічильники без ідентифікаторів пакетів і advisory; їх не можна вважати результатом поточного `npm audit` або використати для визначення fix versions.
+- **Залежності й lock-файли не змінювалися.** Рекомендація: повторити обидві команди в середовищі з доступним DNS/npm registry; зберегти JSON-результати, зіставити кожне advisory із locked version, direct/transitive шляхом та production/dev-групою. Лише після перевірки advisory range та `fixAvailable` підготувати мінімальні patch/minor оновлення в межах чинних semver-діапазонів. Не застосовувати `npm audit fix --force`; major-оновлення винести на окреме погодження.
+- Після погоджених оновлень повторити frontend SEO-тести, серверні unit та integration тести з ізольованою тестовою PostgreSQL, Compose config, Caddy validation, обидві frontend збірки та Docker image builds. Це повторне тестування поки не виконувалося, бо залежності не змінювалися. Production-БД не використовувати.
+
 ## Результати тестування
 
 | Перевірка | Результат |
