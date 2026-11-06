@@ -1,14 +1,21 @@
+www.teplo-tvd.live {
+	redir https://teplo-tvd.live{uri} 308
+}
+
 {$SITE_ADDRESS} {
 	encode zstd gzip
-	redir / /HeatingPumpSite/ 308
+	@legacyRoot path /HeatingPumpSite /HeatingPumpSite/
+	redir @legacyRoot / 308
+	@legacy path_regexp legacy ^/HeatingPumpSite(/.*)$
+	redir @legacy {re.legacy.1} 308
 
 	handle /api/* {
 		reverse_proxy api:3001
 	}
 
-	handle_path /HeatingPumpSite/* {
+	handle {
 		root * /srv/site
-		try_files {path} /index.html
+		try_files {path} {path}/
 		file_server
 	}
 }

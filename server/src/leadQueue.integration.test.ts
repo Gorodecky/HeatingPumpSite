@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import http from "node:http";
 import { spawn, type ChildProcess } from "node:child_process";
 import { once } from "node:events";
 import net from "node:net";
 import test, { after, before, beforeEach } from "node:test";
+import argon2 from "argon2";
 import { PrismaClient } from "@prisma/client";
 import { createLeadWithNotification } from "./leadPersistence.js";
 import {
@@ -32,7 +34,7 @@ const validLead = {
   heating: "Тепла підлога",
   timing: "Найближчим часом",
   name: "Тестова заявка",
-  phone: "+380638788281",
+  phone: "+380000000000",
   comment: "Інтеграційний тест",
   policyVersion: "test",
 };
@@ -94,7 +96,7 @@ test("lead and PENDING notification commit atomically; notification insert failu
 test("provider failure retries with the same lead key and ends SENT", async () => {
   const lead = await createLeadWithNotification(prisma, validLead);
   const keys: string[] = [];
-  const fixedNow = new Date("2026-11-05T12:00:00.000Z");
+  const fixedNow = new Date(Date.now() + 5_000);
   let calls = 0;
   const send = async (item: NotificationLead) => {
     keys.push(`lead-notification/${item.id}`);
@@ -325,6 +327,41 @@ test("migrated API serves health, blocks leads when disabled, and keeps persiste
   try {
     const health = await fetch(`${enabled.origin}/api/v1/health`);
     assert.equal(health.status, 200);
+    const invalidSelection = await fetch(`${enabled.origin}/api/v1/leads`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...selectionFormPayload, phone: "not-a-phone" }),
+    });
+    assert.equal(invalidSelection.status, 400);
+    const validationBody = await invalidSelection.json();
+    assert.equal(validationBody.error, "Перевірте заповнення форми.");
+    assert.ok(Array.isArray(validationBody.fields.phone));
+    assert.equal(await prisma.lead.count(), beforeCount);
+
+    const malformedJson = await fetch(`${enabled.origin}/api/v1/leads`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{not-json",
+    });
+    assert.equal(malformedJson.status, 400);
+    assert.deepEqual(await malformedJson.json(), { error: "Некоректний JSON." });
+
+    const oversizedBody = JSON.stringify({
+      ...selectionFormPayload,
+      comment: "x".repeat(17 * 1024),
+    });
+    const oversizedWithLength = await postRawBody(enabled.origin, oversizedBody, true);
+    assert.equal(oversizedWithLength.status, 413);
+    assert.deepEqual(JSON.parse(oversizedWithLength.body), {
+      error: "Запит перевищує дозволений розмір.",
+    });
+    const oversizedChunked = await postRawBody(enabled.origin, oversizedBody, false);
+    assert.equal(oversizedChunked.status, 413);
+    assert.deepEqual(JSON.parse(oversizedChunked.body), {
+      error: "Запит перевищує дозволений розмір.",
+    });
+    assert.equal(await prisma.lead.count(), beforeCount);
+
     const selectionResponse = await fetch(`${enabled.origin}/api/v1/leads`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -339,18 +376,62 @@ test("migrated API serves health, blocks leads when disabled, and keeps persiste
       body: JSON.stringify({
         source: "contact",
         name: "Тестова контактна заявка",
-        phone: "+380638788281",
-        comment: "Перевірка endpoint",
+        phone: "+380000000000",
         consent: true,
       }),
     });
-    assert.equal(contactResponse.status, 201);
-    const contactId = (await contactResponse.json()).lead.id;
-    for (const leadId of [firstLeadId, contactId]) {
+    const contactResponseBody = await contactResponse.text();
+    assert.equal(contactResponse.status, 201, contactResponseBody);
+    const contactId = JSON.parse(contactResponseBody).lead.id;
+
+    const blankOptionalFields = await fetch(`${enabled.origin}/api/v1/leads`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        source: "contact",
+        city: "",
+        name: "Тестова заявка з порожніми полями",
+        phone: "+380000000000",
+        comment: "",
+        consent: true,
+      }),
+    });
+    assert.equal(blankOptionalFields.status, 201);
+    const blankOptionalFieldsId = (await blankOptionalFields.json()).lead.id;
+
+    for (const leadId of [firstLeadId, contactId, blankOptionalFieldsId]) {
       const notification = await prisma.leadNotification.findUniqueOrThrow({
         where: { leadId },
       });
       assert.equal(notification.status, "PENDING");
+    }
+
+    const functionName = `"${schemaName}"."reject_notification_for_http_test"`;
+    await prisma.$executeRawUnsafe(
+      `CREATE FUNCTION ${functionName}() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'forced internal test failure'; END; $$`,
+    );
+    await prisma.$executeRawUnsafe(
+      `CREATE TRIGGER reject_notification_for_http_test BEFORE INSERT ON "LeadNotification" FOR EACH ROW EXECUTE FUNCTION ${functionName}()`,
+    );
+    try {
+      const failedWrite = await fetch(`${enabled.origin}/api/v1/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...selectionFormPayload,
+          name: "Тест контрольованої помилки",
+        }),
+      });
+      assert.equal(failedWrite.status, 500);
+      const failedBody = await failedWrite.text();
+      assert.equal(failedBody.includes("forced internal test failure"), false);
+      assert.equal(failedBody.includes("stack"), false);
+      assert.equal(await prisma.lead.count(), beforeCount + 3);
+    } finally {
+      await prisma.$executeRawUnsafe(
+        `DROP TRIGGER IF EXISTS reject_notification_for_http_test ON "LeadNotification"`,
+      );
+      await prisma.$executeRawUnsafe(`DROP FUNCTION ${functionName}()`);
     }
   } finally {
     await enabled.stop();
@@ -394,6 +475,112 @@ test("migrated API serves health, blocks leads when disabled, and keeps persiste
   );
 });
 
+test("Zod validation preserves login and administrative route contracts", async () => {
+  const username = `security-test-${process.pid}-${Date.now()}`;
+  const password = "fictional-test-password-only";
+  const admin = await prisma.adminUser.create({
+    data: { username, passwordHash: await argon2.hash(password) },
+  });
+  const api = await startApi(true);
+  try {
+    const csrfResponse = await fetch(`${api.origin}/api/v1/auth/csrf`);
+    assert.equal(csrfResponse.status, 200);
+    const csrfCookieHeader = csrfResponse.headers.get("set-cookie");
+    assert.ok(csrfCookieHeader);
+    const csrfCookie = csrfCookieHeader.split(";")[0];
+    const csrfToken = (await csrfResponse.json()).token;
+
+    const invalidLogin = await fetch(`${api.origin}/api/v1/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: csrfCookie,
+        "x-csrf-token": csrfToken,
+      },
+      body: JSON.stringify({ username: "", password: "" }),
+    });
+    assert.equal(invalidLogin.status, 400);
+    assert.deepEqual(await invalidLogin.json(), { error: "Вкажіть логін і пароль." });
+
+    const login = await fetch(`${api.origin}/api/v1/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: csrfCookie,
+        "x-csrf-token": csrfToken,
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    assert.equal(login.status, 200);
+    const loginBody = await login.json();
+    const authenticatedCookieHeader = login.headers.get("set-cookie");
+    assert.ok(authenticatedCookieHeader);
+    const authenticatedCookie = authenticatedCookieHeader.split(";")[0];
+
+    const adminLeads = await fetch(`${api.origin}/api/v1/admin/leads`, {
+      headers: {
+        Cookie: authenticatedCookie,
+        "x-csrf-token": loginBody.csrfToken,
+      },
+    });
+    assert.equal(adminLeads.status, 200);
+    assert.ok(Array.isArray((await adminLeads.json()).leads));
+
+    const invalidId = await fetch(
+      `${api.origin}/api/v1/admin/leads/not-a-uuid/contacted`,
+      {
+        method: "POST",
+        headers: {
+          Cookie: authenticatedCookie,
+          "x-csrf-token": loginBody.csrfToken,
+        },
+      },
+    );
+    assert.equal(invalidId.status, 400);
+    assert.deepEqual(await invalidId.json(), {
+      error: "Некоректний ідентифікатор заявки.",
+    });
+  } finally {
+    await api.stop();
+    await prisma.adminUser.delete({ where: { id: admin.id } });
+  }
+});
+
+function postRawBody(origin: string, body: string, includeContentLength: boolean) {
+  const target = new URL(origin);
+  return new Promise<{ status: number; body: string }>((resolve, reject) => {
+    const request = http.request(
+      {
+        hostname: target.hostname,
+        port: Number(target.port),
+        path: "/api/v1/leads",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(includeContentLength ? { "Content-Length": Buffer.byteLength(body) } : {}),
+        },
+      },
+      (response) => {
+        const chunks: Buffer[] = [];
+        response.on("data", (chunk: Buffer) => chunks.push(chunk));
+        response.on("end", () =>
+          resolve({
+            status: response.statusCode ?? 0,
+            body: Buffer.concat(chunks).toString("utf8"),
+          }),
+        );
+      },
+    );
+    request.on("error", reject);
+    if (includeContentLength) {
+      request.end(body);
+    } else {
+      request.write(body.slice(0, 8192));
+      request.end(body.slice(8192));
+    }
+  });
+}
+
 async function startApi(leadsEnabled: boolean) {
   const port = await reservePort();
   const child = spawn(
@@ -404,6 +591,7 @@ async function startApi(leadsEnabled: boolean) {
       env: {
         ...process.env,
         DATABASE_URL: databaseUrl,
+        PGOPTIONS: `-c search_path=${schemaName}`,
         SESSION_SECRET: "integration-test-session-secret-00000000000000000000",
         NODE_ENV: "test",
         PORT: String(port),
@@ -412,15 +600,24 @@ async function startApi(leadsEnabled: boolean) {
         RESEND_FROM_EMAIL: "",
         LEAD_NOTIFICATION_EMAIL: "",
       },
-      stdio: "ignore",
+      stdio: ["ignore", "pipe", "pipe"],
     },
   );
+  let childOutput = "";
+  child.stdout?.on("data", (chunk: Buffer) => {
+    childOutput += chunk.toString("utf8");
+  });
+  child.stderr?.on("data", (chunk: Buffer) => {
+    childOutput += chunk.toString("utf8");
+  });
   const origin = `http://127.0.0.1:${port}`;
   try {
     await waitForHealth(child, origin);
   } catch (error) {
     await stopChild(child);
-    throw error;
+    throw new Error(
+      `${error instanceof Error ? error.message : "Test API startup failed."}\n${childOutput}`,
+    );
   }
   return {
     origin,
