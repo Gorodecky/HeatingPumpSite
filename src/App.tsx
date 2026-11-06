@@ -88,7 +88,10 @@ function viewFromPath(pathname: string): View {
 
 function App({ initialPath }: { initialPath?: string }) {
   const [view, setView] = useState<View>(() =>
-    viewFromPath(initialPath ?? window.location.pathname),
+    viewFromPath(
+      initialPath ??
+        (typeof window === "undefined" ? "/" : window.location.pathname),
+    ),
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [step, setStep] = useState(1);

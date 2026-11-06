@@ -10,5 +10,10 @@ const app = (
   </React.StrictMode>
 );
 
-if (root.hasChildNodes()) hydrateRoot(root, app);
+if (root.hasChildNodes())
+  hydrateRoot(root, app, {
+    onRecoverableError(error) {
+      console.error("React hydration recovered from an error:", error);
+    },
+  });
 else createRoot(root).render(app);

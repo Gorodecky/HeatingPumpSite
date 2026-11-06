@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
 import test from "node:test";
+import { createServer } from "vite";
 
 const outputDirectory = path.resolve("dist");
 const expectedRoutes = [
@@ -47,6 +50,28 @@ test("every indexed route has unique metadata and canonical HTML", async () => {
       html.includes(`src="${assetBase}assets/`),
       `assets use the wrong Vite base path on ${expectedRoutes[index]}`,
     );
+  }
+});
+
+test("prerendered route markup matches the initial React server render", async () => {
+  const vite = await createServer({
+    appType: "custom",
+    logLevel: "error",
+    server: { middlewareMode: true, hmr: false, ws: false },
+  });
+  try {
+    const { default: App } = await vite.ssrLoadModule("/src/App.tsx");
+    for (const route of [...expectedRoutes, "/admin/"]) {
+      const html = await readRoute(route);
+      const markup = renderToString(createElement(App, { initialPath: route }));
+      assert.ok(
+        html.includes(`<div id="root">${markup}</div>`),
+        `prerendered markup differs from the initial React render for ${route}`,
+      );
+    }
+    assert.doesNotThrow(() => renderToString(createElement(App)));
+  } finally {
+    await vite.close();
   }
 });
 
