@@ -94,7 +94,7 @@ test("lead and PENDING notification commit atomically; notification insert failu
 test("provider failure retries with the same lead key and ends SENT", async () => {
   const lead = await createLeadWithNotification(prisma, validLead);
   const keys: string[] = [];
-  const fixedNow = new Date("2026-11-05T12:00:00.000Z");
+  const fixedNow = new Date(Date.now() + 5_000);
   let calls = 0;
   const send = async (item: NotificationLead) => {
     keys.push(`lead-notification/${item.id}`);
@@ -325,6 +325,14 @@ test("migrated API serves health, blocks leads when disabled, and keeps persiste
   try {
     const health = await fetch(`${enabled.origin}/api/v1/health`);
     assert.equal(health.status, 200);
+    const invalidSelection = await fetch(`${enabled.origin}/api/v1/leads`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...selectionFormPayload, phone: "not-a-phone" }),
+    });
+    assert.equal(invalidSelection.status, 400);
+    assert.equal(await prisma.lead.count(), beforeCount);
+
     const selectionResponse = await fetch(`${enabled.origin}/api/v1/leads`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
