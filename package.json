@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "test:seo": "npm run build && node --test scripts/seo.test.mjs",
+    "preview:seo": "VITE_LEADS_ENABLED=false npm run build && vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "test:caddy-404": "VITE_LEADS_ENABLED=false npm run build && sh scripts/test-caddy-404.sh",
     "preview": "vite preview",
     "dev:server": "npm --prefix server run dev",
     "build:server": "npm --prefix server run build",
